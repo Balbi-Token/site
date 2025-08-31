@@ -390,6 +390,9 @@
             font-size: 0.9rem;
         }
 
+        /* helper to hide cookie bar reliably */
+        .hidden { display: none !important; }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .nav-links {
@@ -430,8 +433,11 @@
                 <a href="#creator">Creator</a>
                 <a href="#utility">Utility</a>
                 <a href="#how-to-buy">How to Get</a>
+                <!-- Novo link no cabeçalho para o Faucet -->
+                <a href="https://balbi-token.github.io/faucet/" target="_blank" rel="noopener">Faucet</a>
             </div>
-            <a href="#how-to-buy" class="cta-button">Get BALBI</a>
+            <!-- Botão do Faucet no cabeçalho -->
+            <a href="https://balbi-token.github.io/faucet/" target="_blank" rel="noopener" class="cta-button">Balbi Faucet</a>
         </div>
     </header>
 
@@ -568,13 +574,13 @@
         </div>
     </footer>
 
-    <div class="cookie-consent" id="cookie-consent">
+    <div class="cookie-consent" id="cookie-consent" role="dialog" aria-live="polite" aria-label="Cookie consent banner">
         <p>
             This site uses cookies to ensure you get the best experience. By continuing to browse, you agree to the use of cookies. For more information, please see our 
             <a href="privacy.html" target="_blank">Privacy Policy</a>.
         </p>
         <div class="cookie-consent-actions">
-            <button class="btn-accept" id="accept-cookies">Accept</button>
+            <button class="btn-accept" id="accept-cookies" type="button" aria-label="Accept cookies and close">Accept</button>
         </div>
     </div>
 
@@ -609,7 +615,7 @@
             }
         });
 
-        // Cookie Consent Logic
+        // Cookie Consent Logic (reforçado para fechar corretamente)
         document.addEventListener('DOMContentLoaded', () => {
             const consent = localStorage.getItem('cookieConsent');
             const consentBanner = document.getElementById('cookie-consent');
@@ -621,12 +627,19 @@
                 consentBanner.style.display = 'none';
             }
 
-            acceptBtn.addEventListener('click', () => {
-                const expirationDate = new Date();
-                expirationDate.setDate(expirationDate.getDate() + 30); // Expires in 30 days
-                localStorage.setItem('cookieConsent', expirationDate.toISOString());
-                consentBanner.style.display = 'none';
-            });
+            if (acceptBtn) {
+                acceptBtn.addEventListener('click', () => {
+                    const expirationDate = new Date();
+                    expirationDate.setDate(expirationDate.getDate() + 30); // Expires in 30 days
+                    localStorage.setItem('cookieConsent', expirationDate.toISOString());
+                    // Esconde de forma confiável
+                    if (consentBanner) {
+                        consentBanner.classList.add('hidden');
+                        // fallback extra de segurança
+                        consentBanner.style.display = 'none';
+                    }
+                });
+            }
         });
     </script>
 </body>
