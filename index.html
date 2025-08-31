@@ -1,646 +1,374 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BALBI Token - CO₂ Compensation in HVAC</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --primary: #0d2b5a;
-            --secondary: #1a365d;
-            --accent: #2b6cb0;
-            --light-accent: #63b3ed;
-            --text: #e2e8f0;
-            --background: #0f1a2f;
-            --card-bg: #1e293b;
-            --green: #48bb78;
-            --gradient: linear-gradient(135deg, var(--accent), var(--light-accent));
-            --header-gradient: linear-gradient(90deg, #0d2b5a, #1e4785);
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--background);
-            color: var(--text);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        
-        /* Header Styles */
-        header {
-            background: var(--header-gradient);
-            padding: 20px 0;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-        
-        .nav-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        
-        .logo-img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 20px;
-            overflow: hidden;
-            background: var(--gradient);
-            border: 2px solid var(--light-accent);
-        }
-        
-        .logo-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .logo-text {
-            font-size: 24px;
-            font-weight: 700;
-            background: var(--gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        .nav-links {
-            display: flex;
-            gap: 30px;
-        }
-        
-        .nav-links a {
-            color: var(--text);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-        
-        .nav-links a:hover {
-            color: var(--light-accent);
-        }
-        
-        .cta-button {
-            background: var(--gradient);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 30px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        
-        .cta-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(43, 108, 176, 0.4);
-        }
-        
-        /* Hero Section */
-        .hero {
-            padding: 160px 0 100px;
-            background: linear-gradient(to bottom, var(--primary), var(--background));
-            text-align: center;
-        }
-        
-        .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 20px;
-            background: var(--gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        .hero p {
-            font-size: 1.2rem;
-            max-width: 700px;
-            margin: 0 auto 40px;
-            color: var(--text);
-        }
-        
-        .hero-buttons {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            margin-top: 30px;
-        }
-        
-        /* Section Styles */
-        section {
-            padding: 80px 0;
-        }
-        
-        .section-title {
-            text-align: center;
-            margin-bottom: 60px;
-            font-size: 2.5rem;
-            background: var(--gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        /* About Section */
-        .about-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            align-items: center;
-        }
-        
-        .about-text h3 {
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-            color: var(--light-accent);
-        }
-        
-        /* Creator Section */
-        .creator {
-            background-color: var(--card-bg);
-            border-radius: 15px;
-            padding: 40px;
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 30px;
-            align-items: center;
-        }
-        
-        .creator-img {
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 4px solid var(--light-accent);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-        
-        .creator-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        /* Features Section */
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-top: 50px;
-        }
-        
-        .feature-card {
-            background-color: var(--card-bg);
-            border-radius: 15px;
-            padding: 30px;
-            text-align: center;
-            transition: transform 0.3s;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-        
-        .feature-card:hover {
-            transform: translateY(-10px);
-        }
-        
-        .feature-icon {
-            font-size: 40px;
-            margin-bottom: 20px;
-            color: var(--light-accent);
-        }
-        
-        /* How to Buy Section */
-        .steps {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-            margin-top: 50px;
-        }
-        
-        .step {
-            text-align: center;
-            padding: 30px;
-            background-color: var(--card-bg);
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-        
-        .step-number {
-            width: 50px;
-            height: 50px;
-            background: var(--gradient);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            font-weight: bold;
-            font-size: 1.2rem;
-        }
-        
-        /* Footer */
-        footer {
-            background: var(--header-gradient);
-            padding: 60px 0 30px;
-            margin-top: 80px;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BALBI Token - CO₂ Compensation in HVAC</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root{
+      --primary:#0d2b5a; --secondary:#1a365d;
+      --accent:#2b6cb0; --light-accent:#63b3ed; --accent-3:#8ec7ff;
+      --text:#e2e8f0; --muted:#c8d3ea;
+      --background:#0f1a2f; --card-bg:#1e293b;
+      --gradient:linear-gradient(135deg,var(--accent),var(--light-accent));
+      --header-gradient:linear-gradient(90deg,#0d2b5a,#1e4785);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:'Inter',sans-serif; background-color:var(--background); color:var(--text);
+      line-height:1.6; overflow-x:hidden;
+      background:
+        radial-gradient(1000px 420px at -10% -10%, rgba(43,108,176,.28) 0%, transparent 60%),
+        radial-gradient(900px 420px at 110% 120%, rgba(99,179,237,.22) 0%, transparent 62%),
+        linear-gradient(180deg,#0b1429,#0f1a2f);
+    }
+    .container{max-width:1200px;margin:0 auto;padding:0 20px}
 
-        .footer-links {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 40px;
-        }
+    /* hex drift discreto ao fundo com bolinhas preenchidas */
+    .hex-drift{position:fixed; inset:0; z-index:0; pointer-events:none}
+    .hex{position:absolute; width:240px; aspect-ratio:1/1; opacity:.22}
+    .hex svg{width:100%; height:100%}
+    .hex use{stroke:url(#hexStroke); stroke-width:2.5; fill:none}
+    .h1{top:8%; left:-16%; animation:float 30s linear infinite}
+    .h2{top:70%; left:80%;  animation:float 33s linear infinite reverse}
+    .h3{top:26%; left:48%;  animation:float 36s linear infinite}
+    @keyframes float{
+      0%{transform:translateX(-8vw) translateY(0) rotate(0deg)}
+      50%{transform:translateX(18vw) translateY(-6vh) rotate(180deg)}
+      100%{transform:translateX(54vw) translateY(3vh) rotate(360deg)}
+    }
 
-        .footer-links a, .footer-contact a {
-            color: var(--text);
-            text-decoration: none;
-            transition: color 0.3s;
-        }
+    header{
+      background:var(--header-gradient); padding:20px 0; position:fixed; width:100%; top:0; z-index:10;
+      box-shadow:0 4px 12px rgba(0,0,0,.1);
+    }
+    .nav-container{display:flex; justify-content:space-between; align-items:center}
+    .logo{display:flex; align-items:center; gap:12px}
+    .logo-img{
+      width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+      overflow:hidden;background:var(--gradient);border:2px solid var(--light-accent)
+    }
+    .logo-img img{width:100%; height:100%; object-fit:cover}
+    .logo-text{font-size:24px;font-weight:800;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .nav-links{display:flex;gap:30px}
+    .nav-links a{color:var(--text);text-decoration:none;font-weight:500;transition:color .3s}
+    .nav-links a:hover{color:var(--light-accent)}
+    .cta-button{background:var(--gradient);color:#fff;padding:10px 20px;border-radius:30px;text-decoration:none;font-weight:700;transition:transform .3s,box-shadow .3s}
+    .cta-button:hover{transform:translateY(-2px);box-shadow:0 6px 15px rgba(43,108,176,.4)}
 
-        .footer-links a:hover, .footer-contact a:hover {
-            color: var(--light-accent);
-        }
-        
-        .footer-logo {
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-            background: var(--gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        .instagram-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--text);
-            text-decoration: none;
-            margin-top: 20px;
-            padding: 10px 20px;
-            background: var(--card-bg);
-            border-radius: 30px;
-            transition: all 0.3s;
-        }
-        
-        .instagram-link:hover {
-            background: var(--gradient);
-            transform: translateY(-2px);
-        }
-        
-        .copyright {
-            text-align: center;
-            margin-top: 50px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: var(--text);
-            opacity: 0.7;
-        }
+    .hero{padding:160px 0 100px;text-align:center;position:relative;z-index:1;background:linear-gradient(to bottom, var(--primary), transparent)}
+    .hero h1{font-size:3.5rem;margin-bottom:16px;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:800}
+    .hero p{font-size:1.2rem;max-width:700px;margin:0 auto 32px;color:var(--muted)}
+    .hero-buttons{display:flex;gap:20px;justify-content:center;margin-top:24px}
 
-        /* Cookie Consent Styles */
-        .cookie-consent {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 90%;
-            max-width: 600px;
-            background-color: var(--card-bg);
-            border: 1px solid var(--accent);
-            border-radius: 15px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            padding: 20px;
-            z-index: 2000;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            animation: fadeIn 0.5s ease-in-out;
-        }
+    /* hero hex com logo1.png + vértices preenchidos */
+    .hero-logo{display:grid; place-items:center; margin-bottom:24px}
+    .logo-frame{width:min(220px,42vw); aspect-ratio:1/1}
+    .logo-frame svg{width:100%; height:100%}
+    .logo-frame .dash{stroke:#8ec7ff; stroke-width:3; stroke-dasharray:22 82; fill:none; opacity:.9; animation:dashMove 9s linear infinite}
+    @keyframes dashMove{to{stroke-dashoffset:-104}}
+    .logo-frame .main{stroke:url(#stroke); stroke-width:7; fill:none; stroke-linejoin:round}
+    .logo-frame .vertex{fill:url(#stroke)}
+    .logo-frame image{clip-path:url(#clipHex)}
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
-            to { opacity: 1; transform: translateX(-50%) translateY(0); }
-        }
+    section{padding:80px 0; position:relative; z-index:1}
+    .section-title{ text-align:center; margin-bottom:60px; font-size:2.5rem; font-weight:800; background:var(--gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent}
+    .about-content{display:grid; grid-template-columns:1fr 1fr; gap:40px; align-items:center}
+    .about-text h3{font-size:1.8rem;margin-bottom:20px;color:var(--light-accent)}
+    .about-image>div{background:var(--gradient);height:300px;border-radius:15px;display:flex;align-items:center;justify-content:center;box-shadow:0 12px 40px rgba(30,71,133,.35)}
 
-        .cookie-consent p {
-            font-size: 0.9rem;
-        }
+    .creator{background-color:var(--card-bg);border-radius:15px;padding:40px;display:grid;grid-template-columns:1fr 2fr;gap:30px;align-items:center; box-shadow:0 12px 40px rgba(12,22,45,.45), inset 0 1px 0 rgba(255,255,255,.05)}
+    .creator-img{width:200px;height:200px;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center;border:4px solid var(--light-accent);box-shadow:0 5px 15px rgba(0,0,0,.2)}
+    .creator-img img{width:100%;height:100%;object-fit:cover}
 
-        .cookie-consent-actions {
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            gap: 10px;
-        }
+    .features{display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:30px; margin-top:50px}
+    .feature-card{background-color:var(--card-bg);border-radius:15px;padding:30px;text-align:center;transition:transform .3s;box-shadow:0 5px 15px rgba(0,0,0,.1);position:relative;overflow:hidden}
+    .feature-card:hover{transform:translateY(-10px)}
+    .feature-icon{width:84px;margin:0 auto 18px; position:relative}
+    .feature-icon svg{width:100%; height:auto; display:block}
+    .feature-icon .hx{stroke:url(#hexStroke); stroke-width:3; fill:none; stroke-linejoin:round}
+    .feature-icon .dot{fill:url(#hexStroke)}
+    .feature-icon i{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:36px; color:#dfefff}
 
-        .cookie-consent-actions button {
-            padding: 8px 16px;
-            border-radius: 20px;
-            border: none;
-            cursor: pointer;
-            font-weight: 600;
-            transition: background-color 0.3s;
-        }
-        
-        .cookie-consent-actions .btn-accept {
-            background: var(--gradient);
-            color: white;
-        }
+    .steps{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:30px; margin-top:50px}
+    .step{text-align:center;padding:30px;background-color:var(--card-bg);border-radius:15px;box-shadow:0 5px 15px rgba(0,0,0,.1)}
+    .step-number{width:50px;height:50px;background:var(--gradient);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-weight:800;font-size:1.1rem;color:#fff}
 
-        .cookie-consent-actions .btn-accept:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(43, 108, 176, 0.4);
-        }
+    footer{background:var(--header-gradient);padding:60px 0 30px;margin-top:80px}
+    .footer-content{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:40px}
+    .footer-links{display:flex;flex-direction:column;gap:10px}
+    .footer-links a,.footer-contact a{color:var(--text);text-decoration:none;transition:color .3s}
+    .footer-links a:hover,.footer-contact a:hover{color:var(--light-accent)}
+    .footer-logo{font-size:1.8rem;font-weight:800;margin-bottom:20px;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .instagram-link{display:inline-flex;align-items:center;gap:10px;color:var(--text);text-decoration:none;margin-top:20px;padding:10px 20px;background:var(--card-bg);border-radius:30px;transition:all .3s}
+    .instagram-link:hover{background:var(--gradient);transform:translateY(-2px)}
+    .copyright{text-align:center;margin-top:50px;padding-top:20px;border-top:1px solid rgba(255,255,255,.1);color:var(--text);opacity:.7}
 
-        .cookie-consent-actions a {
-            color: var(--light-accent);
-            text-decoration: underline;
-            font-size: 0.9rem;
-        }
+    .cookie-consent{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);width:90%;max-width:600px;background-color:var(--card-bg);border:1px solid var(--accent);border-radius:15px;box-shadow:0 4px 20px rgba(0,0,0,.3);padding:20px;z-index:2000;display:flex;flex-direction:column;gap:15px}
+    .cookie-consent-actions{display:flex;justify-content:flex-end;align-items:center;gap:10px}
+    .cookie-consent-actions .btn-accept{padding:8px 16px;border-radius:20px;border:none;cursor:pointer;font-weight:700;background:var(--gradient);color:#fff}
+    .cookie-consent-actions .btn-accept:hover{transform:translateY(-1px);box-shadow:0 4px 8px rgba(43,108,176,.4)}
+    .hidden{display:none!important}
 
-        /* helper to hide cookie bar reliably */
-        .hidden { display: none !important; }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-            
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-            
-            .about-content {
-                grid-template-columns: 1fr;
-            }
-            
-            .creator {
-                grid-template-columns: 1fr;
-                text-align: center;
-            }
-            
-            .hero-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-        }
-    </style>
+    @media (max-width:768px){
+      .nav-links{display:none}
+      .hero h1{font-size:2.5rem}
+      .about-content{grid-template-columns:1fr}
+      .creator{grid-template-columns:1fr;text-align:center}
+      .hero-buttons{flex-direction:column;align-items:center}
+      .logo-frame{width:min(200px,58vw)}
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <div class="container nav-container">
-            <div class="logo">
-                <div class="logo-img">
-                    <img src="logo.png" alt="BALBI Token Logo">
-                </div>
-                <div class="logo-text">BALBI</div>
-            </div>
-            <div class="nav-links">
-                <a href="#about">About</a>
-                <a href="#creator">Creator</a>
-                <a href="#utility">Utility</a>
-                <a href="#how-to-buy">How to Get</a>
-                <!-- Novo link no cabeçalho para o Faucet -->
-                <a href="https://balbi-token.github.io/faucet/" target="_blank" rel="noopener">Faucet</a>
-            </div>
-            <!-- Botão do Faucet no cabeçalho -->
-            <a href="https://balbi-token.github.io/faucet/" target="_blank" rel="noopener" class="cta-button">Balbi Faucet</a>
-        </div>
-    </header>
 
-    <section class="hero">
-        <div class="container">
-            <h1>BALBI Token</h1>
-            <p>Innovation and awareness for sustainable HVAC through blockchain technology</p>
-            <div class="hero-buttons">
-                <a href="#how-to-buy" class="cta-button">Get Now</a>
-                <a href="#about" class="cta-button" style="background: var(--card-bg);">Learn More</a>
-            </div>
-        </div>
-    </section>
+  <!-- Fundo com hex drift -->
+  <div class="hex-drift" aria-hidden="true">
+    <svg width="0" height="0">
+      <defs>
+        <linearGradient id="hexStroke" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#2b6cb0"/><stop offset="100%" stop-color="#63b3ed"/>
+        </linearGradient>
+        <symbol id="hexSymbol" viewBox="0 0 200 200">
+          <polygon points="100,10 185,55 185,145 100,190 15,145 15,55"
+                   fill="none" stroke="url(#hexStroke)" stroke-width="2.5" stroke-linejoin="round"/>
+          <circle cx="100" cy="10" r="5.2" fill="url(#hexStroke)"/>
+          <circle cx="185" cy="55" r="5.2" fill="url(#hexStroke)"/>
+          <circle cx="185" cy="145" r="5.2" fill="url(#hexStroke)"/>
+          <circle cx="100" cy="190" r="5.2" fill="url(#hexStroke)"/>
+          <circle cx="15" cy="145" r="5.2" fill="url(#hexStroke)"/>
+          <circle cx="15" cy="55" r="5.2" fill="url(#hexStroke)"/>
+        </symbol>
+      </defs>
+    </svg>
+    <div class="hex h1"><svg viewBox="0 0 200 200"><use href="#hexSymbol"/></svg></div>
+    <div class="hex h2"><svg viewBox="0 0 200 200"><use href="#hexSymbol"/></svg></div>
+    <div class="hex h3"><svg viewBox="0 0 200 200"><use href="#hexSymbol"/></svg></div>
+  </div>
 
-    <section id="about" class="container">
-        <h2 class="section-title">About BALBI Token</h2>
-        <div class="about-content">
-            <div class="about-text">
-                <h3>CO₂ Compensation in HVAC</h3>
-                <p>BALBI token emerges as an innovative solution to address one of the biggest challenges in the Heating, Ventilation and Air Conditioning (HVAC) field: compensating for CO₂ emissions.</p>
-                <p>Our mission is to facilitate and raise awareness among HVAC professionals about environmental responsibility, transforming the sector through blockchain technology.</p>
-                <p>By integrating BALBI into their operations, professionals can transparently neutralize their carbon footprint, supporting sustainability projects.</p>
-            </div>
-            <div class="about-image">
-                <div style="background: var(--gradient); height: 300px; border-radius: 15px; display: flex; align-items: center; justify-content: center;">
-                    <i class="fas fa-leaf" style="font-size: 80px; color: white;"></i>
-                </div>
-            </div>
+  <header>
+    <div class="container nav-container">
+      <div class="logo">
+        <div class="logo-img">
+          <!-- apenas no cabeçalho: logo.png -->
+          <img src="logo.png" alt="BALBI Token Logo">
         </div>
-    </section>
-
-    <section id="creator" class="container">
-        <h2 class="section-title">The Creator</h2>
-        <div class="creator">
-            <div class="creator-img">
-                <img src="vinicius-balbi.jpg" alt="Vinícius Balbi">
-            </div>
-            <div class="creator-info">
-                <h3>Vinícius Balbi</h3>
-                <p>With over twenty years of experience in the oil and gas market, working in both onshore and offshore operations, Vinícius Balbi is a highly qualified and recognized HVAC professional.</p>
-                <p>His expertise covers various facets of the sector, being a dedicated member of ASHRAE Brazil and a renowned specialist in technical room pressurization.</p>
-                <p>His passion for innovation and commitment to sustainable practices are the pillars that drive the BALBI project.</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="utility" class="container">
-        <h2 class="section-title">Token Utility</h2>
-        <div class="features">
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="fas fa-leaf"></i>
-                </div>
-                <h3>CO₂ Compensation</h3>
-                <p>Use BALBI tokens to offset carbon emissions from HVAC projects.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="fas fa-certificate"></i>
-                </div>
-                <h3>Green Certification</h3>
-                <p>Obtain sustainability certificates for your projects using BALBI.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="fas fa-hand-holding-usd"></i>
-                </div>
-                <h3>Incentives</h3>
-                <p>Earn rewards for adopting sustainable practices in your projects.</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="how-to-buy" class="container">
-        <h2 class="section-title">How to Get BALBI</h2>
-        <div class="steps">
-            <div class="step">
-                <div class="step-number">1</div>
-                <h3>Acquire USDC</h3>
-                <p>Buy USDC on an exchange of your choice to use on Polygon.</p>
-            </div>
-            <div class="step">
-                <div class="step-number">2</div>
-                <h3>Connect Your Wallet</h3>
-                <p>Connect your wallet (MetaMask, Trust Wallet) to the Polygon network.</p>
-            </div>
-            <div class="step">
-                <div class="step-number">3</div>
-                <h3>Swap on QuickSwap</h3>
-                <p>Access QuickSwap and swap USDC for BALBI directly.</p>
-            </div>
-            <div class="step">
-                <div class="step-number">4</div>
-                <h3>Store Securely</h3>
-                <p>Store your BALBI tokens securely in your wallet.</p>
-            </div>
-        </div>
-        <div style="text-align: center; margin-top: 40px;">
-            <a href="https://dapp.quickswap.exchange/swap/v3/0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359/0x619B0fcDcb30a45091745Fb12C9640237bbF27c5?chainId=137" class="cta-button" target="_blank">Swap USDC/BALBI</a>
-        </div>
-    </section>
-
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-info">
-                    <div class="footer-logo">BALBI</div>
-                    <p>Innovating in CO₂ compensation for HVAC through blockchain.</p>
-                    <a href="https://instagram.com/balbitoken" class="instagram-link" target="_blank">
-                        <i class="fab fa-instagram"></i> Follow us on Instagram
-                    </a>
-                </div>
-                <div class="footer-links">
-                    <h4>Quick Links</h4>
-                    <a href="#about">About</a>
-                    <a href="#creator">Creator</a>
-                    <a href="#utility">Utility</a>
-                    <a href="#how-to-buy">How to Get</a>
-                </div>
-                <div class="footer-contact">
-                    <h4>Contract</h4>
-                    <p style="word-break: break-all; font-size: 0.9rem;">0x619B0fcDcb30a45091745Fb12C9640237bbF27c5</p>
-                    <p><a href="https://polygonscan.com/token/0x619B0fcDcb30a45091745Fb12C9640237bbF27c5" target="_blank">View on PolygonScan</a></p>
-                </div>
-                <div class="footer-links">
-                    <h4>Legal</h4>
-                    <a href="terms.html">Terms and Conditions</a>
-                    <a href="privacy.html">Privacy Policy</a>
-                </div>
-            </div>
-            <div class="copyright">
-                <p>© 2025 Balbi Faucet. Built with ❤️ for the crypto community.</p>
-            </div>
-        </div>
-    </footer>
-
-    <div class="cookie-consent" id="cookie-consent" role="dialog" aria-live="polite" aria-label="Cookie consent banner">
-        <p>
-            This site uses cookies to ensure you get the best experience. By continuing to browse, you agree to the use of cookies. For more information, please see our 
-            <a href="privacy.html" target="_blank">Privacy Policy</a>.
-        </p>
-        <div class="cookie-consent-actions">
-            <button class="btn-accept" id="accept-cookies" type="button" aria-label="Accept cookies and close">Accept</button>
-        </div>
+        <div class="logo-text">BALBI</div>
+      </div>
+      <div class="nav-links">
+        <a href="#about">About</a>
+        <a href="#creator">Creator</a>
+        <a href="#utility">Utility</a>
+        <a href="#how-to-buy">How to Get</a>
+        <a href="https://balbi-token.github.io/faucet/" target="_blank" rel="noopener">Faucet</a>
+      </div>
+      <a href="https://balbi-token.github.io/faucet/" target="_blank" rel="noopener" class="cta-button">Balbi Faucet</a>
     </div>
+  </header>
 
-    <script>
-        // Smooth scrolling for navigation links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                
-                const targetId = this.getAttribute('href');
-                if (targetId === '#') return;
-                
-                const targetElement = document.querySelector(targetId);
-                if (targetElement) {
-                    window.scrollTo({
-                        top: targetElement.offsetTop - 80,
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
-        
-        // Header background change on scroll
-        window.addEventListener('scroll', function() {
-            const header = document.querySelector('header');
-            if (window.scrollY > 50) {
-                header.style.background = 'rgba(13, 43, 90, 0.95)';
-                header.style.backdropFilter = 'blur(10px)';
-            } else {
-                header.style.background = 'var(--header-gradient)';
-                header.style.backdropFilter = 'none';
-            }
-        });
+  <section class="hero">
+    <div class="container">
+      <!-- hex hero com logo1.png -->
+      <div class="hero-logo">
+        <div class="logo-frame">
+          <svg viewBox="0 0 240 240" aria-hidden="true">
+            <defs>
+              <linearGradient id="stroke" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#2b6cb0"/><stop offset="100%" stop-color="#63b3ed"/>
+              </linearGradient>
+              <clipPath id="clipHex"><path id="hexPath" d="M120 36 L193 78 L193 162 L120 204 L47 162 L47 78 Z"/></clipPath>
+            </defs>
+            <use href="#hexPath" class="main"></use>
+            <use href="#hexPath" class="dash"></use>
+            <g>
+              <circle class="vertex" cx="120" cy="36" r="6"/>
+              <circle class="vertex" cx="193" cy="78" r="6"/>
+              <circle class="vertex" cx="193" cy="162" r="6"/>
+              <circle class="vertex" cx="120" cy="204" r="6"/>
+              <circle class="vertex" cx="47"  cy="162" r="6"/>
+              <circle class="vertex" cx="47"  cy="78"  r="6"/>
+            </g>
+            <image href="logo1.png" x="70" y="70" width="100" height="100" preserveAspectRatio="xMidYMid meet" clip-path="url(#clipHex)"/>
+          </svg>
+        </div>
+      </div>
 
-        // Cookie Consent Logic (reforçado para fechar corretamente)
-        document.addEventListener('DOMContentLoaded', () => {
-            const consent = localStorage.getItem('cookieConsent');
-            const consentBanner = document.getElementById('cookie-consent');
-            const acceptBtn = document.getElementById('accept-cookies');
+      <h1>BALBI Token</h1>
+      <p>Innovation and awareness for sustainable HVAC through blockchain technology</p>
+      <div class="hero-buttons">
+        <a href="#how-to-buy" class="cta-button">Get Now</a>
+        <a href="#about" class="cta-button" style="background: var(--card-bg);">Learn More</a>
+      </div>
+    </div>
+  </section>
 
-            if (!consent || new Date(consent) < new Date()) {
-                consentBanner.style.display = 'flex';
-            } else {
-                consentBanner.style.display = 'none';
-            }
+  <section id="about" class="container">
+    <h2 class="section-title">About BALBI Token</h2>
+    <div class="about-content">
+      <div class="about-text">
+        <h3>CO₂ Compensation in HVAC</h3>
+        <p>BALBI token emerges as an innovative solution to address one of the biggest challenges in the Heating, Ventilation and Air Conditioning (HVAC) field: compensating for CO₂ emissions.</p>
+        <p>Our mission is to facilitate and raise awareness among HVAC professionals about environmental responsibility, transforming the sector through blockchain technology.</p>
+        <p>By integrating BALBI into their operations, professionals can transparently neutralize their carbon footprint, supporting sustainability projects.</p>
+      </div>
+      <div class="about-image">
+        <div><i class="fas fa-leaf" style="font-size:80px;color:white"></i></div>
+      </div>
+    </div>
+  </section>
 
-            if (acceptBtn) {
-                acceptBtn.addEventListener('click', () => {
-                    const expirationDate = new Date();
-                    expirationDate.setDate(expirationDate.getDate() + 30); // Expires in 30 days
-                    localStorage.setItem('cookieConsent', expirationDate.toISOString());
-                    // Esconde de forma confiável
-                    if (consentBanner) {
-                        consentBanner.classList.add('hidden');
-                        // fallback extra de segurança
-                        consentBanner.style.display = 'none';
-                    }
-                });
-            }
-        });
-    </script>
+  <section id="creator" class="container">
+    <h2 class="section-title">The Creator</h2>
+    <div class="creator">
+      <div class="creator-img"><img src="vinicius-balbi.jpg" alt="Vinícius Balbi"></div>
+      <div class="creator-info">
+        <h3>Vinícius Balbi</h3>
+        <p>With over twenty years of experience in the oil and gas market, working in both onshore and offshore operations, Vinícius Balbi is a highly qualified and recognized HVAC professional.</p>
+        <p>His expertise covers various facets of the sector, being a dedicated member of ASHRAE Brazil and a renowned specialist in technical room pressurization.</p>
+        <p>His passion for innovation and commitment to sustainable practices are the pillars that drive the BALBI project.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="utility" class="container">
+    <h2 class="section-title">Token Utility</h2>
+    <div class="features">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 200 200" aria-hidden="true">
+            <polygon class="hx" points="100,10 185,55 185,145 100,190 15,145 15,55"/>
+            <g>
+              <circle class="dot" cx="100" cy="10"  r="6"/>
+              <circle class="dot" cx="185" cy="55"  r="6"/>
+              <circle class="dot" cx="185" cy="145" r="6"/>
+              <circle class="dot" cx="100" cy="190" r="6"/>
+              <circle class="dot" cx="15"  cy="145" r="6"/>
+              <circle class="dot" cx="15"  cy="55"  r="6"/>
+            </g>
+          </svg>
+          <i class="fas fa-leaf" aria-hidden="true"></i>
+        </div>
+        <h3>CO₂ Compensation</h3>
+        <p>Use BALBI tokens to offset carbon emissions from HVAC projects.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 200 200" aria-hidden="true">
+            <polygon class="hx" points="100,10 185,55 185,145 100,190 15,145 15,55"/>
+            <g>
+              <circle class="dot" cx="100" cy="10"  r="6"/>
+              <circle class="dot" cx="185" cy="55"  r="6"/>
+              <circle class="dot" cx="185" cy="145" r="6"/>
+              <circle class="dot" cx="100" cy="190" r="6"/>
+              <circle class="dot" cx="15"  cy="145" r="6"/>
+              <circle class="dot" cx="15"  cy="55"  r="6"/>
+            </g>
+          </svg>
+          <i class="fas fa-certificate" aria-hidden="true"></i>
+        </div>
+        <h3>Green Certification</h3>
+        <p>Obtain sustainability certificates for your projects using BALBI.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 200 200" aria-hidden="true">
+            <polygon class="hx" points="100,10 185,55 185,145 100,190 15,145 15,55"/>
+            <g>
+              <circle class="dot" cx="100" cy="10"  r="6"/>
+              <circle class="dot" cx="185" cy="55"  r="6"/>
+              <circle class="dot" cx="185" cy="145" r="6"/>
+              <circle class="dot" cx="100" cy="190" r="6"/>
+              <circle class="dot" cx="15"  cy="145" r="6"/>
+              <circle class="dot" cx="15"  cy="55"  r="6"/>
+            </g>
+          </svg>
+          <i class="fas fa-hand-holding-usd" aria-hidden="true"></i>
+        </div>
+        <h3>Incentives</h3>
+        <p>Earn rewards for adopting sustainable practices in your projects.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="how-to-buy" class="container">
+    <h2 class="section-title">How to Get BALBI</h2>
+    <div class="steps">
+      <div class="step"><div class="step-number">1</div><h3>Acquire USDC</h3><p>Buy USDC on an exchange of your choice to use on Polygon.</p></div>
+      <div class="step"><div class="step-number">2</div><h3>Connect Your Wallet</h3><p>Connect your wallet (MetaMask, Trust Wallet) to the Polygon network.</p></div>
+      <div class="step"><div class="step-number">3</div><h3>Swap on QuickSwap</h3><p>Access QuickSwap and swap USDC for BALBI directly.</p></div>
+      <div class="step"><div class="step-number">4</div><h3>Store Securely</h3><p>Store your BALBI tokens securely in your wallet.</p></div>
+    </div>
+    <div style="text-align:center;margin-top:40px;">
+      <a href="https://dapp.quickswap.exchange/swap/v3/0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359/0x619B0fcDcb30a45091745Fb12C9640237bbF27c5?chainId=137" class="cta-button" target="_blank">Swap USDC/BALBI</a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-info">
+          <div class="footer-logo">BALBI</div>
+          <p>Innovating in CO₂ compensation for HVAC through blockchain.</p>
+          <a href="https://instagram.com/balbitoken" class="instagram-link" target="_blank"><i class="fab fa-instagram"></i> Follow us on Instagram</a>
+        </div>
+        <div class="footer-links">
+          <h4>Quick Links</h4>
+          <a href="#about">About</a><a href="#creator">Creator</a><a href="#utility">Utility</a><a href="#how-to-buy">How to Get</a>
+        </div>
+        <div class="footer-contact">
+          <h4>Contract</h4>
+          <p style="word-break:break-all;font-size:.9rem;">0x619B0fcDcb30a45091745Fb12C9640237bbF27c5</p>
+          <p><a href="https://polygonscan.com/token/0x619B0fcDcb30a45091745Fb12C9640237bbF27c5" target="_blank">View on PolygonScan</a></p>
+        </div>
+        <div class="footer-links">
+          <h4>Legal</h4>
+          <a href="terms.html">Terms and Conditions</a>
+          <a href="privacy.html">Privacy Policy</a>
+        </div>
+      </div>
+      <div class="copyright">
+        <p>© 2025 Balbi Faucet. Built with ❤️ for the crypto community.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Cookie -->
+  <div class="cookie-consent" id="cookie-consent" role="dialog" aria-live="polite" aria-label="Cookie consent banner">
+    <p>This site uses cookies to ensure you get the best experience. By continuing to browse, you agree to the use of cookies. For more information, please see our <a href="privacy.html" target="_blank">Privacy Policy</a>.</p>
+    <div class="cookie-consent-actions">
+      <button class="btn-accept" id="accept-cookies" type="button" aria-label="Accept cookies and close">Accept</button>
+    </div>
+  </div>
+
+  <script>
+    // smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{
+      a.addEventListener('click',e=>{
+        const id=a.getAttribute('href'); if(id==='#') return;
+        const el=document.querySelector(id); if(!el) return;
+        e.preventDefault(); window.scrollTo({top:el.offsetTop-80,behavior:'smooth'});
+      });
+    });
+    // header blur
+    window.addEventListener('scroll',()=>{
+      const h=document.querySelector('header');
+      if(window.scrollY>50){ h.style.background='rgba(13,43,90,.95)'; h.style.backdropFilter='blur(10px)'; }
+      else{ h.style.background='var(--header-gradient)'; h.style.backdropFilter='none'; }
+    });
+    // cookie
+    document.addEventListener('DOMContentLoaded',()=>{
+      const banner=document.getElementById('cookie-consent');
+      const btn=document.getElementById('accept-cookies');
+      const consent=localStorage.getItem('cookieConsent');
+      if(!consent || new Date(consent)<new Date()){ banner.style.display='flex'; } else { banner.style.display='none'; }
+      btn?.addEventListener('click',()=>{
+        const exp=new Date(); exp.setDate(exp.getDate()+30);
+        localStorage.setItem('cookieConsent',exp.toISOString());
+        banner.classList.add('hidden'); banner.style.display='none';
+      });
+    });
+  </script>
 </body>
 </html>
