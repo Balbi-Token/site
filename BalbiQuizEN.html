@@ -1,0 +1,575 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BalbiQuiz - HVAC Mini Quiz</title>
+    <style>
+        :root {
+            --glow-color: #00ffcc;
+            --secondary-glow: #ff00cc;
+            --animation-speed: 0.5s;
+            --bg-color: #0a0a0a;
+            --text-color: #fff;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --border-color: var(--glow-color);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Arial', sans-serif; }
+        body {
+            background: linear-gradient(45deg, var(--bg-color), #1a1a1a);
+            color: var(--text-color);
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100vh; perspective: 1000px; overflow: hidden; position: relative;
+        }
+        body::before {
+            content: ''; position: absolute; width: 200%; height: 200%;
+            background: conic-gradient(from 0deg, transparent, var(--glow-color), transparent);
+            top: -50%; left: -50%; animation: rotate-bg 15s linear infinite; opacity: 0.15; z-index: -1;
+        }
+        @keyframes rotate-bg { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .container {
+            max-width: 800px; width: 90%; padding: 20px; text-align: center; transform-style: preserve-3d; position: relative;
+            min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;
+        }
+        #welcome, .question-card, #result { display: none; transform-style: preserve-3d; }
+        #welcome { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+        .logo {
+            font-size: 3em; text-shadow: 0 0 10px var(--glow-color), 0 0 20px var(--secondary-glow);
+            animation: text-glow 1.5s infinite alternate, float 4s ease-in-out infinite; transform-style: preserve-3d;
+        }
+        .logo::before {
+            content: 'BalbiQuiz'; position: absolute; top: 0; left: 0; color: transparent;
+            text-shadow: 0 0 20px var(--glow-color); animation: glitch 2s infinite;
+        }
+        @keyframes glitch { 0% { clip: rect(0, auto, auto, 0); } 5% { clip: rect(10px, auto, auto, 0); transform: skew(0.5deg); }
+            10% { clip: rect(20px, auto, auto, 0); transform: skew(-0.5deg); } 100% { clip: rect(0, auto, auto, 0); } }
+        @keyframes text-glow { 0% { text-shadow: 0 0 10px var(--glow-color); }
+            100% { text-shadow: 0 0 20px var(--glow-color), 0 0 30px var(--secondary-glow); } }
+        @keyframes float { 0%, 100% { transform: translateY(0) rotateX(0deg) rotateY(0deg); }
+            50% { transform: translateY(-20px) rotateX(10deg) rotateY(5deg); } }
+        button {
+            padding: 15px 30px; font-size: 1.2em;
+            background: linear-gradient(45deg, var(--glow-color), var(--secondary-glow));
+            border: none; border-radius: 10px; color: var(--text-color); cursor: pointer;
+            position: relative; overflow: hidden; transform-style: preserve-3d;
+            transition: transform var(--animation-speed) ease, box-shadow var(--animation-speed) ease; margin: 10px;
+        }
+        button:hover { transform: scale(1.1) rotateX(10deg) rotateY(5deg);
+            box-shadow: 0 0 30px var(--glow-color), 0 0 50px var(--secondary-glow); }
+        button::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: shine 2s infinite linear;
+        }
+        @keyframes shine { 0% { left: -100%; } 100% { left: 100%; } }
+        .question-card {
+            background: var(--card-bg); border: 2px solid var(--border-color); border-radius: 15px;
+            padding: 30px; margin: 20px 0; box-shadow: 0 0 20px var(--glow-color);
+            transform: rotateY(5deg); transition: transform var(--animation-speed) ease;
+            animation: pulse-card 2s infinite ease-in-out;
+        }
+        .question-card:hover { transform: rotateY(0deg) scale(1.05);
+            box-shadow: 0 0 40px var(--glow-color), 0 0 60px var(--secondary-glow); }
+        @keyframes pulse-card { 0%, 100% { transform: rotateY(5deg) scale(1); } 50% { transform: rotateY(5deg) scale(1.02); } }
+        .question-card h2 { font-size: 1.8em; margin-bottom: 20px; text-shadow: 0 0 10px var(--glow-color); }
+        .question-card p { font-size: 1.2em; margin-bottom: 20px; }
+        .hint { font-style: italic; color: #ccc; margin-top: 10px; display: none; }
+        #result { transform-style: preserve-3d; }
+        .score { font-size: 3em; text-shadow: 0 0 20px var(--glow-color); animation: score-pop 1s ease-out, text-glow 1.5s infinite alternate; }
+        @keyframes score-pop { 0% { transform: scale(0.5) rotateX(-90deg); opacity: 0; } 100% { transform: scale(1) rotateX(0deg); opacity: 1; } }
+        .pass-fail { font-size: 2em; margin: 20px 0; animation: float 4s ease-in-out infinite; }
+        .footer { position: absolute; bottom: 10px; width: 100%; text-align: center; font-size: 0.9em; color: #ccc; text-shadow: 0 0 5px var(--glow-color); }
+        @keyframes fadeOutUp { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-50px); } }
+        @keyframes fadeInDown { 0% { opacity: 0; transform: translateY(-50px); } 100% { opacity: 1; transform: translateY(0); } }
+        /* Answer Key */
+        #answerKey { margin-top: 10px; font-size: 0.85em; opacity: 0.9; text-align: left; }
+        #answerKey .item { margin: 6px 0; line-height: 1.25; }
+        #answerKey .ok { color: #10ff82; }
+        #answerKey .bad { color: #ff6b6b; }
+        #answerKey .tip { color: #66aaff; } /* correct when the player is wrong */
+        /* Discreet sound button (much smaller) */
+        .sound-toggle{
+            font-size: .8em;
+            padding: 6px 12px;
+            border-radius: 16px;
+            margin-top: 2px;
+            background:#2a2a2a;
+            box-shadow:none;
+        }
+        .sound-toggle:hover{ transform:none; box-shadow:none; }
+        .sound-toggle::before{ display:none; }
+        @media (max-width: 600px) {
+            .container { width: 95%; padding: 10px; }
+            .logo { font-size: 2em; }
+            button { padding: 10px 20px; font-size: 1em; }
+            .question-card h2 { font-size: 1.5em; }
+            .question-card p { font-size: 1em; }
+            .footer { font-size: 0.8em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="welcome">
+            <h1 class="logo">BalbiQuiz</h1>
+            <p>Welcome to the HVAC mini Quiz! Test your knowledge on projects and concepts based on ASHRAE manuals.</p>
+            <!-- Discreet sound button ABOVE the start button -->
+            <button id="soundToggle" class="sound-toggle" aria-pressed="true">sound: on</button>
+            <button onclick="startGame()">Start Game</button>
+        </div>
+
+        <!-- Same structure, with 3 options -->
+        <div id="question1" class="question-card">
+            <h2 id="title1"></h2>
+            <p id="text1"></p>
+            <p>Choose the decision:</p>
+            <button id="opt1a" onclick="selectAnswer(1,'a')"></button>
+            <button id="opt1b" onclick="selectAnswer(1,'b')"></button>
+            <button id="opt1c" onclick="selectAnswer(1,'c')"></button>
+            <button onclick="showHint(1)">Request Hint</button>
+            <p class="hint" id="hint1"></p>
+        </div>
+        <div id="question2" class="question-card">
+            <h2 id="title2"></h2>
+            <p id="text2"></p>
+            <p>Choose the decision:</p>
+            <button id="opt2a" onclick="selectAnswer(2,'a')"></button>
+            <button id="opt2b" onclick="selectAnswer(2,'b')"></button>
+            <button id="opt2c" onclick="selectAnswer(2,'c')"></button>
+            <button onclick="showHint(2)">Request Hint</button>
+            <p class="hint" id="hint2"></p>
+        </div>
+        <div id="question3" class="question-card">
+            <h2 id="title3"></h2>
+            <p id="text3"></p>
+            <p>Choose the decision:</p>
+            <button id="opt3a" onclick="selectAnswer(3,'a')"></button>
+            <button id="opt3b" onclick="selectAnswer(3,'b')"></button>
+            <button id="opt3c" onclick="selectAnswer(3,'c')"></button>
+            <button onclick="showHint(3)">Request Hint</button>
+            <p class="hint" id="hint3"></p>
+        </div>
+        <div id="question4" class="question-card">
+            <h2 id="title4"></h2>
+            <p id="text4"></p>
+            <p>Choose the decision:</p>
+            <button id="opt4a" onclick="selectAnswer(4,'a')"></button>
+            <button id="opt4b" onclick="selectAnswer(4,'b')"></button>
+            <button id="opt4c" onclick="selectAnswer(4,'c')"></button>
+            <button onclick="showHint(4)">Request Hint</button>
+            <p class="hint" id="hint4"></p>
+        </div>
+        <div id="question5" class="question-card">
+            <h2 id="title5"></h2>
+            <p id="text5"></p>
+            <p>Choose the decision:</p>
+            <button id="opt5a" onclick="selectAnswer(5,'a')"></button>
+            <button id="opt5b" onclick="selectAnswer(5,'b')"></button>
+            <button id="opt5c" onclick="selectAnswer(5,'c')"></button>
+            <button onclick="showHint(5)">Request Hint</button>
+            <p class="hint" id="hint5"></p>
+        </div>
+
+        <div id="result">
+            <h2>BalbiQuiz Final Result</h2>
+            <p class="score" id="scoreText">Score: 0/100</p>
+            <p class="pass-fail" id="passFail"></p>
+            <!-- Small round answer key -->
+            <div id="answerKey"></div>
+            <button onclick="restartGame()">Play Again</button>
+        </div>
+        <div class="footer">© 2025 BalbiQuiz. Built with ❤️ for the crypto community.</div>
+    </div>
+
+    <script>
+        /* ========= AUDIO ========= */
+        let audioCtx = null;
+        let soundOn = true;
+        function ensureAudio(){
+            if(!audioCtx){
+                try { audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }
+                catch(e){ /* ignore audio issues */ }
+            }
+        }
+        // Same sound for answer/hint clicks
+        function tapSound(){
+            if(!soundOn) return;
+            try{
+                ensureAudio();
+                if(!audioCtx) return;
+                const play = ()=>{
+                    const o = audioCtx.createOscillator();
+                    const g = audioCtx.createGain();
+                    o.connect(g); g.connect(audioCtx.destination);
+                    o.type = "sine"; o.frequency.value = 620;
+                    const t0 = audioCtx.currentTime;
+                    g.gain.setValueAtTime(0.001, t0);
+                    g.gain.exponentialRampToValueAtTime(0.18, t0 + 0.01);
+                    g.gain.exponentialRampToValueAtTime(0.001, t0 + 0.12);
+                    o.start(t0); o.stop(t0 + 0.14);
+                };
+                if(audioCtx.state === "suspended"){ audioCtx.resume().then(play).catch(()=>{}); } else { play(); }
+            }catch(e){ /* does not interrupt the game */ }
+        }
+        // Short sound on start
+        function startSound(){
+            if(!soundOn) return;
+            try{
+                ensureAudio();
+                if(!audioCtx) return;
+                const play = ()=>{
+                    const o = audioCtx.createOscillator();
+                    const g = audioCtx.createGain();
+                    o.connect(g); g.connect(audioCtx.destination);
+                    o.type = "sine"; o.frequency.value = 520;
+                    const t0 = audioCtx.currentTime;
+                    g.gain.setValueAtTime(0.001, t0);
+                    g.gain.exponentialRampToValueAtTime(0.15, t0 + 0.02);
+                    g.gain.exponentialRampToValueAtTime(0.001, t0 + 0.10);
+                    o.start(t0); o.stop(t0 + 0.12);
+                };
+                if(audioCtx.state === "suspended"){ audioCtx.resume().then(play).catch(()=>{}); } else { play(); }
+            }catch(e){ /* ignore */ }
+        }
+
+        const soundBtn = document.getElementById('soundToggle');
+        soundBtn.addEventListener('click', ()=>{
+            soundOn = !soundOn;
+            soundBtn.textContent = soundOn ? "sound: on" : "sound: off";
+            soundBtn.setAttribute('aria-pressed', soundOn ? 'true' : 'false');
+            // no sound played here to avoid disrupting first interaction
+        });
+
+        /* ========= STATE ========= */
+        const QUESTIONS_PER_ROUND = 5; // maintained
+        let currentQuestion = 0;
+        let score = 0;
+        let hintsUsed = Array(5).fill(false);
+        let selectedQuestions = [];
+        const answersMap = {};             // UI correct/wrong map
+        const chosen = {};                 // user's choice record
+        const displayedOptionsText = {};   // displayed texts per question
+        const correctTextMap = {};         // correct text displayed (for answer key when wrong)
+
+        // util
+        const shuffle = (arr) => arr.map(v=>({v, r:Math.random()})).sort((a,b)=>a.r-b.r).map(e=>e.v);
+
+        // short references (randomly appear in correct/wrong answers)
+        const normRefs = [
+            "ASHRAE 62.1-2019 §6.2",
+            "ASHRAE 55-2020 §5.3",
+            "ASHRAE 90.1-2019 §6.5",
+            "ASHRAE 15-2019 §8",
+            "ASHRAE TC 9.9 (Thermal Guidelines)",
+            "NBR 16401-3:2008 §7",
+            "NBR 15220-3 §5",
+            "IEC 60079-13 §5.5"
+        ];
+        function maybeDecorateWithRef(text){
+            if (Math.random() < 0.5) {
+                const ref = normRefs[Math.floor(Math.random()*normRefs.length)];
+                return `${text} — Ref: ${ref}`;
+            }
+            return text;
+        }
+
+        /* ====== QUESTION BANK (24 items, 3 options) ====== */
+        const questions = [
+            { text: "Commercial building with stuffy air and persistent odors. Minimal ventilation.",
+              correct: "Increase outdoor ventilation and balance the system to meet appropriate IAQ criteria.",
+              wrong1: "Reduce air renewal to cut consumption, maintaining the current status.",
+              wrong2: "Apply a refrigerant safety criterion to decide minimum ventilation rates.",
+              hint: "Adequate ventilation is critical for IAQ." },
+            { text: "Hospital with mold due to high humidity; HVAC does not control RH.",
+              correct: "Dehumidify and maintain RH < 60% with dedicated supply control.",
+              wrong1: "Increase only the temperature setpoint and ignore RH.",
+              wrong2: "Use energy efficiency requirements to set an RH point in critical areas.",
+              hint: "Mold = high RH; address humidity directly." },
+            { text: "Oversized ducts cause uneven distribution and noise.",
+              correct: "Resize ducts using established methods (e.g., static regain/SMACNA) and rebalance.",
+              wrong1: "Install more fans in series without reviewing ducts.",
+              wrong2: "Use electrical standards to define air duct sizing.",
+              hint: "Duct methods address the root issue." },
+            { text: "Refrigerant choice; options include high GWP.",
+              correct: "Prioritize low GWP fluid considering safety, efficiency, and compatibility.",
+              wrong1: "Choose the highest GWP for lower CAPEX.",
+              wrong2: "Use an occupancy ventilation procedure to approve refrigerant.",
+              hint: "Sustainability and compliance matter." },
+            { text: "Tall building with unwanted outdoor air infiltration.",
+              correct: "Adjust pressures for slight positive in clean zones and improve sealing.",
+              wrong1: "Seal windows with tape without reviewing setpoints and balancing.",
+              wrong2: "Set pressures based solely on thermal comfort limits.",
+              hint: "Pressure relationship between zones is key." },
+            { text: "Data center with hotspot in racks due to poor distribution.",
+              correct: "Contain hot/cold aisles and optimize air paths, sealing gaps.",
+              wrong1: "Increase fan speed only.",
+              wrong2: "Use refrigerant safety requirements for IT layout.",
+              hint: "Organized airflow prevents overheating." },
+            { text: "Office with discomfort due to variations between zones.",
+              correct: "Zone control (e.g., commissioned VAV) and proper diffusion.",
+              wrong1: "Increase central unit power for the entire floor.",
+              wrong2: "Set a single return sensor as the reference for the entire floor.",
+              hint: "More local control = more comfort." },
+            { text: "School with low-efficiency filters and compromised IAQ.",
+              correct: "Adopt higher MERV (e.g., 13) and ensure proper sealing/settling.",
+              wrong1: "Lower filter efficiency to reduce pressure drop.",
+              wrong2: "Use a fluid safety classification standard to define MERV.",
+              hint: "Proper filtration reduces particles." },
+            { text: "Recurring refrigerant leaks in industrial system.",
+              correct: "Maintenance program with leak detection, records, and root cause elimination.",
+              wrong1: "Periodically top off fluid and continue operating.",
+              wrong2: "Apply minimum ventilation criteria to define acceptable leak.",
+              hint: "Leaks are not routine: investigate." },
+            { text: "Theater with HVAC noise impacting acoustics.",
+              correct: "Duct silencers, proper diffusion, and controlled velocities.",
+              wrong1: "Increase flow to 'mask' noise.",
+              wrong2: "Use a residential standard for theater acoustic goals.",
+              hint: "Duct acoustic treatment helps greatly." },
+            { text: "Cold storage with high consumption due to poor insulation.",
+              correct: "Improve insulation/sealing and review doors/air curtains.",
+              wrong1: "Increase compressor capacity.",
+              wrong2: "Use thermal comfort guidelines to specify refrigeration panels.",
+              hint: "Controlled thermal losses = lower consumption." },
+            { text: "Laboratory with insufficient ACH for volatile contaminants.",
+              correct: "Increase air changes and dedicated exhaust; evaluate hoods/local capture.",
+              wrong1: "Add fragrance and maintain current ACH.",
+              wrong2: "Use energy efficiency standards to define minimum exhaust.",
+              hint: "Safety first; specific exhaust." },
+            { text: "Hotel with inconsistent temperatures between rooms.",
+              correct: "Thermostats per room/zone, balancing, and valve/diffuser checks.",
+              wrong1: "Single setpoint adjustment at the central unit for all.",
+              wrong2: "Use ventilation requirements to control guest setpoint.",
+              hint: "Individual control improves experience." },
+            { text: "Shopping mall with persistent kitchen odors.",
+              correct: "Resize hood/duct/discharge exhaust and balance pressures.",
+              wrong1: "Increase only general mall ventilation.",
+              wrong2: "Apply a fluid safety standard for commercial hoods.",
+              hint: "Kitchens require dedicated exhaust." },
+            { text: "Gym with condensation on windows due to high RH.",
+              correct: "Dehumidify supply and adjust diffusion/temperatures.",
+              wrong1: "Open more outdoor air without addressing RH.",
+              wrong2: "Use building efficiency standards to set gym RH.",
+              hint: "Tackle humidity; ventilation alone may not suffice." },
+            { text: "Cleanroom requiring controlled particles and pressure.",
+              correct: "Appropriate positive differential pressure and HEPA filtration; proper seals and doors.",
+              wrong1: "Use MERV 8 and open doors for 'more ventilation'.",
+              wrong2: "Use fluid safety standard for air cleanliness class.",
+              hint: "Pressure + filtration = foundation." },
+            { text: "Library with cold drafts over users.",
+              correct: "Reposition diffusers and reduce terminal velocity; proper diffusion.",
+              wrong1: "Reduce air renewal.",
+              wrong2: "Use ammonia refrigeration standard for diffusers.",
+              hint: "Correct diffusion avoids 'draft'." },
+            { text: "Meeting rooms with high CO₂ during peak times.",
+              correct: "Demand-controlled ventilation (CO₂) and balanced rates.",
+              wrong1: "Increase only the setpoint.",
+              wrong2: "Use fluid safety standard for CO₂ goals.",
+              hint: "DCV balances IAQ and energy." },
+            { text: "Ground floor entrance with infiltration from door opening/closing.",
+              correct: "Vestibule/air curtain and slight internal positive; functional seals.",
+              wrong1: "Create internal negative to 'pull' outdoor air.",
+              wrong2: "Apply fluid safety standard to calculate infiltration.",
+              hint: "Door airflow control works." },
+            { text: "Reception with odors from adjacent restrooms.",
+              correct: "Adequate dedicated exhaust and verification of water seals.",
+              wrong1: "Add fragrance and reduce exhaust to save energy.",
+              wrong2: "Use thermal comfort for restroom exhaust rate.",
+              hint: "Dirty environments require specific exhaust." },
+            { text: "Tall auditorium with thermal stratification.",
+              correct: "Destratification/high return and uniform supply distribution.",
+              wrong1: "Lower general setpoint without addressing diffusion.",
+              wrong2: "Use minimum occupancy ventilation to calculate stage height.",
+              hint: "Address stratification in air design." },
+            { text: "Small IT room with hotspot in server.",
+              correct: "Channel cold air to the point and seal passage gaps.",
+              wrong1: "Install heater to compensate for differences.",
+              wrong2: "Use energy efficiency to position racks.",
+              hint: "Direct air where needed and seal." },
+            { text: "Residence with basement odors rising via stairs.",
+              correct: "Light basement exhaust, seal passages, and automatic door closure.",
+              wrong1: "Negatively pressurize the living room.",
+              wrong2: "Use fluid safety for basement exhaust rate.",
+              hint: "Well-thought pressure gradient resolves." },
+            { text: "Gym with 'heavy' air after peak times.",
+              correct: "Increase ACH, improve filtration, and adopt demand-controlled ventilation.",
+              wrong1: "Close outdoor air intakes to save energy.",
+              wrong2: "Use fluid safety standard to define gym MERV.",
+              hint: "High bioeffluent load requires renewal/filtration." }
+        ];
+
+        function startGame() {
+            // prevent any audio issues from blocking the first tap
+            try { startSound(); } catch(e) {}
+            document.getElementById('welcome').style.display = 'none';
+            score = 0; currentQuestion = 0; hintsUsed = Array(5).fill(false);
+            selectRandomQuestions();
+            setupQuestions();
+            nextQuestion();
+        }
+
+        function selectRandomQuestions() {
+            selectedQuestions = [];
+            const total = questions.length; // 24
+            let indices = Array.from({length: total}, (_, i) => i);
+            for (let i = 0; i < 5; i++) {
+                const r = Math.floor(Math.random() * indices.length);
+                selectedQuestions.push(indices.splice(r, 1)[0]);
+            }
+        }
+
+        function setupQuestions() {
+            for (let i = 0; i < 5; i++) {
+                let questionNum = i + 1;
+                let questionIndex = selectedQuestions[i];
+                const q = questions[questionIndex];
+
+                document.getElementById(`title${questionNum}`).innerText = `Situation ${questionNum}`;
+                document.getElementById(`text${questionNum}`).innerText = q.text;
+                document.getElementById(`hint${questionNum}`).innerText = q.hint || "";
+
+                // 3 options with chance of citing standard (both correct and wrong)
+                const optionObjs = [
+                    { key: 'a', text: q.correct, ok: true },
+                    { key: 'b', text: q.wrong1, ok: false },
+                    { key: 'c', text: q.wrong2, ok: false }
+                ].map(o => ({ ...o, text: maybeDecorateWithRef(o.text) }));
+
+                const shuffled = shuffle(optionObjs);
+
+                // map and displayed texts
+                answersMap[questionNum] = {};
+                displayedOptionsText[questionNum] = { a: "", b: "", c: "" };
+
+                // locate displayed correct text (for answer key when wrong)
+                let correctShownText = "";
+
+                const ids = [`opt${questionNum}a`, `opt${questionNum}b`, `opt${questionNum}c`];
+                for (let k = 0; k < 3; k++) {
+                    const btnId = ids[k];
+                    const opt = shuffled[k];
+                    const actualKey = ['a','b','c'][k];
+                    document.getElementById(btnId).innerText = opt.text;
+                    answersMap[questionNum][actualKey] = opt.ok;
+                    displayedOptionsText[questionNum][actualKey] = opt.text;
+                    if (opt.ok) correctShownText = opt.text;
+                }
+                correctTextMap[questionNum] = correctShownText;
+            }
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            if (currentQuestion <= 5) {
+                let nextCard = document.getElementById(`question${currentQuestion}`);
+                nextCard.style.display = 'block';
+                nextCard.style.animation = 'fadeInDown 0.5s ease-in-out';
+                setTimeout(() => { nextCard.style.animation = ''; }, 500);
+            } else {
+                showResult();
+            }
+        }
+
+        function selectAnswer(questionNum, key) {
+            const correct = !!(answersMap[questionNum] && answersMap[questionNum][key]);
+            chosen[questionNum] = { key, text: displayedOptionsText[questionNum][key], correct };
+
+            if (correct) { score += 20; }
+            tapSound();
+
+            let currentCard = document.getElementById(`question${questionNum}`);
+            currentCard.style.animation = 'fadeOutUp 0.5s ease-in-out';
+            setTimeout(() => {
+                currentCard.style.display = 'none';
+                currentCard.style.animation = '';
+                nextQuestion();
+            }, 500);
+        }
+
+        function showHint(question) {
+            if (!hintsUsed[question - 1]) {
+                document.getElementById(`hint${question}`).style.display = 'block';
+                hintsUsed[question - 1] = true;
+                tapSound();
+            } else {
+                alert('You have already used your hint for this question!');
+            }
+        }
+
+        function showResult() {
+            document.getElementById('result').style.display = 'block';
+            document.getElementById('scoreText').innerText = `Score: ${score}/100`;
+            if (score >= 60) {
+                document.getElementById('passFail').innerText = 'You passed the HVAC Fire Test! Congratulations, Agent!';
+                document.getElementById('passFail').style.color = '#00ff00';
+            } else {
+                document.getElementById('passFail').innerText = 'You did not pass. Study the ASHRAE manuals more!';
+                document.getElementById('passFail').style.color = '#ff0000';
+            }
+            renderAnswerKey();
+        }
+
+        // Answer key: shows choice; if wrong, also shows the correct in blue
+        function renderAnswerKey(){
+            const wrap = document.getElementById('answerKey');
+            let html = '<h4 style="margin:8px 0 4px; opacity:.9">Answer Key for This Round</h4>';
+            html += '<div>';
+            for (let i=1;i<=5;i++){
+                if (!chosen[i]) continue;
+                const cls = chosen[i].correct ? 'ok' : 'bad';
+                html += `<div class="item"><strong>Q${i}:</strong> <span class="${cls}">${escapeHtml(chosen[i].text)}</span>`;
+                if (!chosen[i].correct) {
+                    html += `<div class="tip">Correct: ${escapeHtml(correctTextMap[i] || "")}</div>`;
+                }
+                html += `</div>`;
+            }
+            html += '</div>';
+            wrap.innerHTML = html;
+        }
+
+        function escapeHtml(str){
+            return String(str).replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
+        }
+
+        function restartGame(){ location.reload(); }
+    </script>
+</body>
+</html>
