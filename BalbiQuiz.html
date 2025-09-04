@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>BalbiQuiz - Mini RPG de HVAC (Wallet + Claim 4h)</title>
+  <title>BalbiQuiz - HVAC (Wallet + Claim 4h)</title>
 
   <!-- ethers para derivar endereço localmente -->
   <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
 
-  <!-- Reutiliza utilitários do frontend da faucet (se expor window.BalbiFaucet) -->
+  <!-- (opcional) utilitários da faucet: se expor window.BalbiFaucet.sendReward -->
   <script>
     (function(){
       const s=document.createElement('script');
@@ -30,7 +30,7 @@
       color:var(--text); background:linear-gradient(45deg,var(--bg),#0f1724);
       perspective:1000px; overflow:hidden; position:relative;
     }
-    /* halo + hex azul */
+    /* halo + hex azul no fundo */
     body::before{
       content:''; position:absolute; width:200%; height:200%; top:-50%; left:-50%;
       background:conic-gradient(from 0deg, transparent, var(--blue-glow), transparent);
@@ -120,10 +120,6 @@
       .question-card h2{font-size:1.5em}
       .question-card p{font-size:1em}
     }
-
-    /* Cookie banner (compatível com faucet) */
-    #cookieConsent{position:fixed; bottom:0; width:100%; background:rgba(20,20,40,.95); color:#fff; text-align:center; padding:15px 20px; display:none; z-index:1000; box-shadow:0 -2px 10px rgba(0,136,255,.3)}
-    #acceptCookiesButton{margin-top:10px; padding:8px 16px; border-radius:8px; border:none; background:linear-gradient(90deg,#2b6cb0,#63b3ed); color:#000; font-weight:bold; cursor:pointer;}
   </style>
 </head>
 <body>
@@ -140,48 +136,48 @@
         <button id="soundToggle" class="sound" aria-pressed="true">som: liga</button>
         <button id="startBtn">Iniciar Jogo</button>
       </div>
-      <small style="opacity:.75">Armazenamos localmente como <code>balbiPrivateKey</code> quando você aceita cookies (igual à faucet).</small>
+      <small style="opacity:.75">Sua chave <u>não é salva</u> nem enviada para nenhum servidor.</small>
     </section>
 
-    <!-- PERGUNTAS -->
+    <!-- PERGUNTAS (5 por rodada) -->
     <div id="question1" class="question-card">
       <h2 id="title1"></h2><p id="text1"></p><p>Escolha a decisão:</p>
-      <button id="opt1a" onclick="selectAnswer(1,'a')"></button>
-      <button id="opt1b" onclick="selectAnswer(1,'b')"></button>
-      <button id="opt1c" onclick="selectAnswer(1,'c')"></button>
-      <button onclick="showHint(1)">Pedir Dica</button>
+      <button id="opt1a" data-q="1" data-k="a"></button>
+      <button id="opt1b" data-q="1" data-k="b"></button>
+      <button id="opt1c" data-q="1" data-k="c"></button>
+      <button class="hintBtn" data-h="1">Pedir Dica</button>
       <p id="hint1" class="hint"></p>
     </div>
     <div id="question2" class="question-card">
       <h2 id="title2"></h2><p id="text2"></p><p>Escolha a decisão:</p>
-      <button id="opt2a" onclick="selectAnswer(2,'a')"></button>
-      <button id="opt2b" onclick="selectAnswer(2,'b')"></button>
-      <button id="opt2c" onclick="selectAnswer(2,'c')"></button>
-      <button onclick="showHint(2)">Pedir Dica</button>
+      <button id="opt2a" data-q="2" data-k="a"></button>
+      <button id="opt2b" data-q="2" data-k="b"></button>
+      <button id="opt2c" data-q="2" data-k="c"></button>
+      <button class="hintBtn" data-h="2">Pedir Dica</button>
       <p id="hint2" class="hint"></p>
     </div>
     <div id="question3" class="question-card">
       <h2 id="title3"></h2><p id="text3"></p><p>Escolha a decisão:</p>
-      <button id="opt3a" onclick="selectAnswer(3,'a')"></button>
-      <button id="opt3b" onclick="selectAnswer(3,'b')"></button>
-      <button id="opt3c" onclick="selectAnswer(3,'c')"></button>
-      <button onclick="showHint(3)">Pedir Dica</button>
+      <button id="opt3a" data-q="3" data-k="a"></button>
+      <button id="opt3b" data-q="3" data-k="b"></button>
+      <button id="opt3c" data-q="3" data-k="c"></button>
+      <button class="hintBtn" data-h="3">Pedir Dica</button>
       <p id="hint3" class="hint"></p>
     </div>
     <div id="question4" class="question-card">
       <h2 id="title4"></h2><p id="text4"></p><p>Escolha a decisão:</p>
-      <button id="opt4a" onclick="selectAnswer(4,'a')"></button>
-      <button id="opt4b" onclick="selectAnswer(4,'b')"></button>
-      <button id="opt4c" onclick="selectAnswer(4,'c')"></button>
-      <button onclick="showHint(4)">Pedir Dica</button>
+      <button id="opt4a" data-q="4" data-k="a"></button>
+      <button id="opt4b" data-q="4" data-k="b"></button>
+      <button id="opt4c" data-q="4" data-k="c"></button>
+      <button class="hintBtn" data-h="4">Pedir Dica</button>
       <p id="hint4" class="hint"></p>
     </div>
     <div id="question5" class="question-card">
       <h2 id="title5"></h2><p id="text5"></p><p>Escolha a decisão:</p>
-      <button id="opt5a" onclick="selectAnswer(5,'a')"></button>
-      <button id="opt5b" onclick="selectAnswer(5,'b')"></button>
-      <button id="opt5c" onclick="selectAnswer(5,'c')"></button>
-      <button onclick="showHint(5)">Pedir Dica</button>
+      <button id="opt5a" data-q="5" data-k="a"></button>
+      <button id="opt5b" data-q="5" data-k="b"></button>
+      <button id="opt5c" data-q="5" data-k="c"></button>
+      <button class="hintBtn" data-h="5">Pedir Dica</button>
       <p id="hint5" class="hint"></p>
     </div>
 
@@ -202,75 +198,44 @@
       </div>
 
       <div id="answerKey" style="margin-top:10px; text-align:left; font-size:.9em; opacity:.95"></div>
-      <button onclick="restartGame()">Jogar Novamente</button>
+      <button id="restartBtn">Jogar Novamente</button>
     </section>
   </div>
 
-  <!-- COOKIE CONSENT -->
-  <div id="cookieConsent">
-    <p>Usamos cookies para armazenar sua private key localmente e melhorar sua experiência. Ao continuar, você concorda com nossa Política de Privacidade.</p>
-    <button id="acceptCookiesButton" type="button">Aceitar</button>
-  </div>
-
   <script>
-    /* =========================
-       CONFIG / Constantes
-    ==========================*/
-    // chaves iguais às da faucet
-    const LS_PK_KEY   = 'balbiPrivateKey';
+    /***** CONSTANTES DE ESTADO (sem salvar private key) *****/
     const LS_ADDR_KEY = 'balbi_wallet_addr';
-
-    // estado do "rate limit" do QUIZ
     const LS_WINDOW_START = 'balbi_quiz_window_start';
     const LS_ROUNDS_USED  = 'balbi_quiz_rounds_used';
     const LS_PENDING      = 'balbi_quiz_pending';
     const LS_LAST_CLAIM   = 'balbi_quiz_last_claim';
 
-    const WINDOW_MS = 4 * 60 * 60 * 1000;  // 4 horas
-    const CLAIM_COOLDOWN_MS = 4 * 60 * 60 * 1000; // 4 horas
+    const WINDOW_MS = 4 * 60 * 60 * 1000;  // 4h
+    const CLAIM_COOLDOWN_MS = 4 * 60 * 60 * 1000; // 4h
     const MAX_ROUNDS = 3;
 
-    /* =========================
-       Cookie banner (igual faucet)
-    ==========================*/
-    (function cookieBanner(){
-      const cc = document.getElementById('cookieConsent');
-      const btn = document.getElementById('acceptCookiesButton');
-      const accepted = localStorage.getItem('balbi_cookie_ok') === '1';
-      if (!accepted){ cc.style.display='block'; }
-      btn.addEventListener('click', ()=>{ localStorage.setItem('balbi_cookie_ok','1'); cc.style.display='none'; });
-    })();
-
-    /* =========================
-       Áudio
-    ==========================*/
+    /***** ÁUDIO *****/
     let audioCtx=null, soundOn=true;
     function ensureAudio(){ if(!audioCtx){ try{ audioCtx=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } }
     function beep(freq=520, dur=.12){
       if(!soundOn) return;
       try{
         ensureAudio(); if(!audioCtx) return;
-        const play=()=>{
-          const o=audioCtx.createOscillator(), g=audioCtx.createGain();
-          o.type="sine"; o.frequency.value=freq; o.connect(g); g.connect(audioCtx.destination);
-          const t0=audioCtx.currentTime;
-          g.gain.setValueAtTime(.001,t0);
-          g.gain.exponentialRampToValueAtTime(.16,t0+.02);
-          g.gain.exponentialRampToValueAtTime(.001,t0+dur);
-          o.start(t0); o.stop(t0+dur+.02);
-        };
-        (audioCtx.state==="suspended"?audioCtx.resume():Promise.resolve()).then(play).catch(()=>{});
+        const o=audioCtx.createOscillator(), g=audioCtx.createGain();
+        o.type="sine"; o.frequency.value=freq; o.connect(g); g.connect(audioCtx.destination);
+        const t0=audioCtx.currentTime;
+        g.gain.setValueAtTime(.001,t0);
+        g.gain.exponentialRampToValueAtTime(.16,t0+.02);
+        g.gain.exponentialRampToValueAtTime(.001,t0+dur);
+        o.start(t0); o.stop(t0+dur+.02);
       }catch(e){}
     }
-    const soundBtn=document.getElementById('soundToggle');
-    soundBtn.addEventListener('click',()=>{soundOn=!soundOn; soundBtn.textContent=soundOn?"som: liga":"som: desliga"; soundBtn.setAttribute('aria-pressed', soundOn?'true':'false');});
 
-    /* =========================
-       Helpers de LS / Tempo
-    ==========================*/
+    /***** UTIL TEMPO/LS *****/
     const now = ()=> Date.now();
     const readInt = (k,def=0)=>{ const v=localStorage.getItem(k); const n=v==null?NaN:Number(v); return Number.isFinite(n)?n:def; };
     const readFloat = (k,def=0)=>{ const v=localStorage.getItem(k); const n=v==null?NaN:parseFloat(v); return Number.isFinite(n)?n:def; };
+
     function startNewWindow(){
       localStorage.setItem(LS_WINDOW_START, String(now()));
       localStorage.setItem(LS_ROUNDS_USED, '0');
@@ -289,58 +254,23 @@
       const next = Math.max(0, (pendingAmount() + (reward||0)));
       localStorage.setItem(LS_PENDING, next.toFixed(1));
     }
-    function canStartRound(){
-      ensureWindow();
-      return roundsUsed() < MAX_ROUNDS;
-    }
+    function canStartRound(){ ensureWindow(); return roundsUsed() < MAX_ROUNDS; }
     function resetIfWindowExpired(){
       const ws = readInt(LS_WINDOW_START, 0);
       if (!ws || now() - ws >= WINDOW_MS){ startNewWindow(); }
     }
-
-    /* =========================
-       Wallet / Login
-    ==========================*/
-    const pkInput  = document.getElementById('privateKey');
-    const startBtn = document.getElementById('startBtn');
-
-    function isValidPrivateKey(v){ return /^0x[0-9a-fA-F]{64}$/.test((v||'').trim()); }
-    async function deriveAddress(pk){
-      try{ return new ethers.Wallet(pk.trim()).address; }catch(e){ return null; }
+    function claimCooldownRemaining(){
+      const last = readInt(LS_LAST_CLAIM, 0);
+      if (!last) return 0;
+      return Math.max(0, CLAIM_COOLDOWN_MS - (now()-last));
+    }
+    function formatMs(ms){
+      const s = Math.ceil(ms/1000);
+      const h = Math.floor(s/3600), m = Math.floor((s%3600)/60), ss = s%60;
+      return [h,m,ss].map(n=>String(n).padStart(2,'0')).join(':');
     }
 
-    // Prepara estado inicial da janela 4h
-    resetIfWindowExpired();
-
-    startBtn.addEventListener('click', async ()=>{
-      if (!canStartRound()){
-        const ws = readInt(LS_WINDOW_START, 0);
-        const wait = Math.max(0, WINDOW_MS - (now()-ws));
-        alert("Limite de 3 rodadas atingido. Aguarde " + formatMs(wait) + " para nova janela.");
-        return;
-      }
-
-      const pk = (pkInput.value||'').trim();
-      if(!isValidPrivateKey(pk)){ alert('Private Key inválida. Use 0x + 64 hex.'); pkInput.focus(); return; }
-
-      // salva PK se cookies aceitos (compatível faucet)
-      if (localStorage.getItem('balbi_cookie_ok') === '1'){
-        try{ localStorage.setItem(LS_PK_KEY, pk); }catch(e){}
-      }
-
-      walletAddress = await deriveAddress(pk);
-      if(!walletAddress){ alert('Não foi possível derivar o endereço.'); return; }
-      try{ localStorage.setItem(LS_ADDR_KEY, walletAddress); }catch(e){}
-
-      beep(520,.12);
-      document.getElementById('welcome').style.display='none';
-      score=0; currentQuestion=0; hintsUsed=Array(5).fill(false);
-      selectRandomQuestions(); setupQuestions(); nextQuestion();
-    });
-
-    /* =========================
-       Quiz
-    ==========================*/
+    /***** QUIZ DATA *****/
     const QUESTIONS = [];
     const baseQ = [
       {text:"Edifício comercial com ar abafado e odores persistentes. Ventilação mínima.",
@@ -399,4 +329,51 @@
        wrong2:"Usar diretrizes de conforto térmico para especificar painel frigorífico.",
        hint:"Perdas térmicas controladas = menor consumo."},
       {text:"Laboratório com ACH insuficiente para contaminantes voláteis.",
-       c
+       correct:"Aumentar troca de ar e exaustão dedicada; avaliar capelas/capturas locais.",
+       wrong1:"Perfumar o ambiente e manter ACH atual.",
+       wrong2:"Usar normas de eficiência energética para definir exaustão mínima.",
+       hint:"Segurança primeiro; exaustão específica."},
+      {text:"Hotel com temperatura inconsistente entre quartos.",
+       correct:"Termostatos por quarto/zona, balanceamento e conferência de válvulas/difusores.",
+       wrong1:"Ajuste único de setpoint na central para todos.",
+       wrong2:"Usar requisitos de ventilação para controlar setpoint do hóspede.",
+       hint:"Controle individual melhora a experiência."},
+      {text:"Shopping com odores persistentes de cozinhas.",
+       correct:"Redimensionar exaustão de coifas/dutos/descarga e balancear pressões.",
+       wrong1:"Aumentar apenas ventilação geral do mall.",
+       wrong2:"Aplicar um padrão de segurança de fluidos para coifas comerciais.",
+       hint:"Cozinha pede exaustão dedicada."},
+      {text:"Ginásio com condensação em janelas por UR alta.",
+       correct:"Desumidificar o suprimento e ajustar difusão/temperaturas.",
+       wrong1:"Abrir mais ar externo sem tratar UR.",
+       wrong2:"Usar norma de eficiência predial para fixar UR do ginásio.",
+       hint:"Ataque a umidade; só ventilação pode não bastar."},
+      {text:"Sala limpa requer partículas e pressão controladas.",
+       correct:"Pressão diferencial positiva adequada e filtragem HEPA; vedações e portas corretas.",
+       wrong1:"Empregar MERV 8 e portas abertas para 'maior ventilação'.",
+       wrong2:"Usar padrão de segurança de fluidos para classe de limpeza de ar.",
+       hint:"Pressão + filtragem = base."},
+      {text:"Biblioteca com correntes frias sobre usuários.",
+       correct:"Reposicionar difusores e reduzir velocidade terminal; difusão adequada.",
+       wrong1:"Reduzir renovação de ar.",
+       wrong2:"Usar norma de refrigeração de amônia para difusores.",
+       hint:"Difusão correta evita 'draft'."},
+      {text:"Salas de reunião com CO₂ elevado em pico.",
+       correct:"Ventilação por demanda (CO₂) e balanceamento das taxas.",
+       wrong1:"Elevar apenas o setpoint.",
+       wrong2:"Usar padrão de segurança de fluidos para metas de CO₂.",
+       hint:"DCV equilibra IAQ e energia."},
+      {text:"Entrada térrea com infiltração pelo abre/fecha de portas.",
+       correct:"Vestíbulo/cortina de ar e leve positivo interno; vedações funcionais.",
+       wrong1:"Criar negativo interno para 'puxar' o ar externo.",
+       wrong2:"Aplicar norma de segurança de fluidos para calcular infiltração.",
+       hint:"Controle de fluxo na porta funciona."},
+      {text:"Recepção com odores vindos de sanitários adjacentes.",
+       correct:"Exaustão dedicada adequada e verificação de selos hidráulicos.",
+       wrong1:"Perfumar e reduzir exaustão para economizar.",
+       wrong2:"Usar conforto térmico para taxa de exaustão de banheiros.",
+       hint:"Ambientes sujos pedem exaustão própria."},
+      {text:"Auditório alto com estratificação térmica.",
+       correct:"Destratificação/retorno alto e distribuição uniforme do suprimento.",
+       wrong1:"Baixar setpoint geral sem mexer em difusão.",
+       wrong2:"Usar ventilação mínima de ocupação para calcular altura do palco.
