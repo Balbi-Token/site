@@ -1,37 +1,97 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Termos de Serviço - Balbi Faucet</title>
+    <title>Termos de Serviço - Token BALBI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: sans-serif; line-height: 1.6; padding: 20px; max-width: 800px; margin: auto; }
-        h1, h2 { color: #007bff; }
-        p, li { color: #555; }
-        a { color: #007bff; text-decoration: none; }
+        :root {
+            --primary: #0d2b5a;
+            --secondary: #1a365d;
+            --accent: #2b6cb0;
+            --light-accent: #63b3ed;
+            --text: #e2e8f0;
+            --background: #0f1a2f;
+            --card-bg: #1e293b;
+            --green: #48bb78;
+            --gradient: linear-gradient(135deg, var(--accent), var(--light-accent));
+            --header-gradient: linear-gradient(90deg, #0d2b5a, #1e4785);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+        }
+
+        h1, h2 {
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin-top: 40px;
+        }
+
+        p, li {
+            color: var(--text);
+            opacity: 0.9;
+        }
+
+        a {
+            color: var(--light-accent);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        a:hover {
+            color: var(--accent);
+        }
+
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
-    <h1>Termos de Serviço da Balbi Faucet</h1>
+    <h1>Termos de Serviço do Token BALBI</h1>
     <p>Última atualização: 28 de agosto de 2025</p>
 
-    <p>Ao usar a Balbi Faucet (o "Serviço"), você concorda em cumprir e se sujeitar aos seguintes termos e condições. Se você não concordar com estes termos, não use o Serviço.</p>
+    <p>Ao utilizar o Token BALBI (o "Serviço"), você concorda em cumprir e estar vinculado aos seguintes termos e condições. Caso não concorde com estes termos, não utilize o Serviço.</p>
 
     <h2>1. Descrição do Serviço</h2>
-    <p>A Balbi Faucet é um serviço gratuito que distribui tokens Balbi (BALBI) na rede Polygon para fins de teste e engajamento da comunidade. Os tokens não possuem valor monetário garantido e são fornecidos "como estão".</p>
+    <p>O Token BALBI é um serviço gratuito que distribui tokens BALBI na rede Polygon para fins de teste e engajamento da comunidade. Os tokens não possuem valor monetário garantido e são fornecidos "como estão".</p>
 
     <h2>2. Uso Aceitável</h2>
     <ul>
         <li>O uso do Serviço é permitido apenas para fins de teste e desenvolvimento.</li>
-        <li>É proibido o uso de automação, scripts ou qualquer método que não seja a interface fornecida para reivindicar tokens.</li>
-        <li>A tentativa de explorar ou abusar do Serviço, incluindo reivindicações excessivas, é estritamente proibida e pode resultar na sua suspensão.</li>
+        <li>É proibido utilizar automação, scripts ou qualquer método além da interface fornecida para reivindicar tokens.</li>
+        <li>Tentativas de explorar ou abusar do Serviço, incluindo reivindicações excessivas, são estritamente proibidas e podem resultar em sua suspensão.</li>
     </ul>
 
     <h2>3. Isenção de Responsabilidade</h2>
-    <p>O Serviço é fornecido "como está", sem garantias de qualquer tipo. Nós não garantimos que o Serviço será ininterrupto, livre de erros ou que os tokens distribuídos terão qualquer valor. Você usa o Serviço por sua própria conta e risco. Não nos responsabilizamos por perdas ou danos decorrentes do uso ou da incapacidade de usar o Serviço, incluindo perdas de fundos.</p>
+    <p>O Serviço é fornecido "como está", sem garantias de qualquer tipo. Não garantimos que o Serviço será ininterrupto, livre de erros ou que os tokens distribuídos terão qualquer valor. Você utiliza o Serviço por sua própria conta e risco. Não nos responsabilizamos por perdas ou danos resultantes do uso ou da incapacidade de usar o Serviço, incluindo perda de fundos.</p>
 
     <h2>4. Propriedade Intelectual</h2>
-    <p>Todo o conteúdo, logotipos e marca registrada da Balbi Faucet são de nossa propriedade ou licenciados. Você não pode usar, copiar ou distribuir qualquer parte do Serviço sem nossa permissão expressa por escrito.</p>
+    <p>Todos os conteúdos, logotipos e marcas do Token BALBI são de nossa propriedade ou licenciados para nós. Você não pode usar, copiar ou distribuir qualquer parte do Serviço sem nossa permissão expressa por escrito.</p>
 
     <h2>5. Alterações nos Termos</h2>
     <p>Reservamo-nos o direito de modificar estes Termos de Serviço a qualquer momento. Quaisquer alterações entrarão em vigor imediatamente após a publicação no site. O uso continuado do Serviço constitui sua aceitação das alterações.</p>
@@ -40,8 +100,16 @@
     <p>Estes Termos de Serviço são regidos e interpretados de acordo com as leis do Brasil, sem considerar conflitos de disposições legais.</p>
 
     <h2>7. Contato</h2>
-    <p>Se você tiver alguma dúvida sobre estes Termos de Serviço, entre em contato conosco através do nosso site ou canais de mídia social.</p>
+    <p>Se você tiver dúvidas sobre estes Termos de Serviço, entre em contato conosco por meio de nosso site ou canais de redes sociais.</p>
 
-    <p><a href="index.html">Voltar para a Faucet</a></p>
+    <p><a href="index.html">Voltar ao Token</a></p>
+    <br>
+    <br>
+    <br>
+    <footer>
+    <div class="copyright" style="text-align: center; margin-top: 50px; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.1); color: var(--text); opacity: 0.7;">
+        <p>© 2025 Token BALBI. Construído com ❤️ para a comunidade cripto brasileira.</p>
+    </div>
+    </footer>
 </body>
 </html>
