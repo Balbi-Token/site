@@ -1,54 +1,122 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Política de Privacidade - Balbi Faucet</title>
+    <title>Política de Privacidade - Token BALBI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: sans-serif; line-height: 1.6; padding: 20px; max-width: 800px; margin: auto; }
-        h1, h2 { color: #007bff; }
-        p, li { color: #555; }
-        a { color: #007bff; text-decoration: none; }
+        :root {
+            --primary: #0d2b5a;
+            --secondary: #1a365d;
+            --accent: #2b6cb0;
+            --light-accent: #63b3ed;
+            --text: #e2e8f0;
+            --background: #0f1a2f;
+            --card-bg: #1e293b;
+            --green: #48bb78;
+            --gradient: linear-gradient(135deg, var(--accent), var(--light-accent));
+            --header-gradient: linear-gradient(90deg, #0d2b5a, #1e4785);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+        }
+
+        h1, h2 {
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin-top: 40px;
+        }
+
+        p, li {
+            color: var(--text);
+            opacity: 0.9;
+        }
+
+        a {
+            color: var(--light-accent);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        a:hover {
+            color: var(--accent);
+        }
+
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
-    <h1>Política de Privacidade da Balbi Faucet</h1>
+    <h1>Política de Privacidade do Token BALBI</h1>
     <p>Última atualização: 28 de agosto de 2025</p>
 
-    <p>Sua privacidade é importante para nós. Esta política de privacidade explica como a Balbi Faucet coleta, usa e protege suas informações pessoais.</p>
+    <p>Sua privacidade é importante para nós. Esta política de privacidade explica como o Token BALBI coleta, utiliza e protege suas informações pessoais.</p>
 
-    <h2>1. Informações Coletadas</h2>
-    <p>Nós coletamos as seguintes informações quando você interage com o Serviço:</p>
+    <h2>1. Informações que Coletamos</h2>
+    <p>Coletamos as seguintes informações quando você interage com o Serviço:</p>
     <ul>
-        <li><strong>Endereço da carteira:</strong> Coletado para enviar os tokens e para impor o período de espera de 4 horas entre as reivindicações.</li>
-        <li><strong>Carimbo de data/hora da última reivindicação:</strong> Armazenado para rastrear o período de espera e evitar abusos do Serviço.</li>
+        <li><strong>Endereço da Carteira:</strong> Coletado para enviar tokens e garantir o período de espera de 4 horas entre reivindicações.</li>
+        <li><strong>Registro do Último Pedido:</strong> Armazenado para monitorar o período de espera e prevenir abusos no Serviço.</li>
     </ul>
 
     <h2>2. Uso de Cookies e Armazenamento Local</h2>
-    <p>O site utiliza um cookie (via armazenamento local do navegador) para verificar seu consentimento com esta política de privacidade. O token é um simples marcador que indica que você aceitou a política.</p>
-    <p><strong>Sua chave privada não é armazenada em nossos servidores.</strong> Ela é usada apenas no seu navegador para assinar as transações e não é transmitida para nossa infraestrutura de backend.</p>
+    <p>O site utiliza um cookie (via armazenamento local do navegador) para verificar seu consentimento com esta política de privacidade. O token é um marcador simples que indica que você aceitou a política.</p>
+    <p><strong>Sua chave privada não é armazenada em nossos servidores.</strong> Ela é usada apenas no seu navegador para assinar transações e não é transmitida para nossa infraestrutura backend.</p>
 
-    <h2>3. Finalidade do Tratamento de Dados</h2>
-    <p>Os dados coletados (endereço da carteira e carimbo de data/hora) são usados exclusivamente para a operação da faucet, garantindo que o Serviço seja justo e distribuído de maneira equitativa entre os usuários, prevenindo spam e abusos.</p>
+    <h2>3. Finalidade do Processamento de Dados</h2>
+    <p>Os dados coletados (endereço da carteira e registro de tempo) são usados exclusivamente para o funcionamento do token, garantindo que o Serviço seja justo e distribuído de forma equitativa entre os usuários, prevenindo spam e abusos.</p>
 
     <h2>4. Compartilhamento de Informações</h2>
-    <p>Nós não vendemos, alugamos ou compartilhamos suas informações pessoais com terceiros.</p>
+    <p>Não vendemos, alugamos ou compartilhamos suas informações pessoais com terceiros.</p>
 
     <h2>5. Segurança</h2>
-    <p>Tomamos medidas razoáveis para proteger as informações que coletamos contra acesso não autorizado. No entanto, lembre-se de que nenhum método de transmissão pela Internet é 100% seguro.</p>
+    <p>Adotamos medidas razoáveis para proteger as informações coletadas contra acesso não autorizado. No entanto, lembre-se de que nenhum método de transmissão pela internet é 100% seguro.</p>
 
     <h2>6. Seus Direitos (LGPD)</h2>
-    <p>De acordo com a Lei Geral de Proteção de Dados (LGPD), você tem o direito de:</p>
+    <p>De acordo com a Lei Geral de Proteção de Dados (LGPD), você tem direito a:</p>
     <ul>
         <li>Acessar as informações que mantemos sobre você.</li>
         <li>Solicitar a correção de dados incompletos ou desatualizados.</li>
-        <li>Solicitar a anonimização, bloqueio ou exclusão de dados desnecessários ou tratados em desconformidade com a LGPD.</li>
+        <li>Solicitar a anonimização, bloqueio ou exclusão de dados desnecessários ou processados em desacordo com a LGPD.</li>
     </ul>
-    <p>Para exercer esses direitos, entre em contato conosco através das informações fornecidas no nosso site.</p>
+    <p>Para exercer esses direitos, entre em contato conosco usando as informações fornecidas em nosso site.</p>
 
     <h2>7. Alterações nesta Política</h2>
-    <p>Podemos atualizar esta política de privacidade periodicamente. Notificaremos você sobre quaisquer mudanças publicando a nova política nesta página. Recomendamos que você a revise regularmente.</p>
+    <p>Podemos atualizar esta política de privacidade periodicamente. Notificaremos você sobre quaisquer alterações publicando a nova política nesta página. Recomendamos que você a revise regularmente.</p>
 
-    <p><a href="index.html">Voltar para a Faucet</a></p>
+    <p><a href="index.html">Voltar ao Token</a></p>
+    <br>
+    <br>
+    <br>
+    <footer>
+    <div class="copyright" style="text-align: center; margin-top: 50px; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.1); color: var(--text); opacity: 0.7;">
+        <p>© 2025 Token BALBI. Construído com ❤️ para a comunidade cripto brasileira.</p>
+    </div>
+    </footer>
 </body>
 </html>
