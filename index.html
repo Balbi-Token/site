@@ -101,7 +101,7 @@
 
     footer{background:var(--header-gradient);padding:60px 0 30px;margin-top:80px}
     .footer-content{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:40px}
-    .footer-links{display:flex;flex-direction:column;gap:10px}
+    .footer-links{display:flex; flex-direction:column; gap:10px}
     .footer-links a,.footer-contact a{color:var(--text);text-decoration:none;transition:color .3s}
     .footer-links a:hover,.footer-contact a:hover{color:var(--light-accent)}
     .footer-logo{font-size:1.8rem;font-weight:800;margin-bottom:20px;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
@@ -366,7 +366,7 @@
       }
     });
 
-    // Adição do token BALBI à MetaMask com verificação aprimorada
+    // Adição do token BALBI à MetaMask com detecção aprimorada
     async function addBALBIToken() {
       const tokenParams = {
         type: 'ERC20',
@@ -386,7 +386,7 @@
             return;
           }
 
-          // Conecta a conta antes de adicionar o token
+          // Conecta a conta
           await window.ethereum.request({ method: 'eth_requestAccounts' });
 
           // Adiciona o token
@@ -396,16 +396,27 @@
           });
 
           if (wasAdded) {
-            alert('BALBI adicionado à sua MetaMask! Verifique na aba "Assets". Se não aparecer, adicione manualmente usando o contrato: 0x619B0fcDcb30a45091745Fb12C9640237bbF27c5.');
+            alert('BALBI adicionado à sua MetaMask! Verifique na aba "Assets".');
           } else {
-            alert('A adição do token não foi confirmada. Tente adicionar manualmente usando o contrato: 0x619B0fcDcb30a45091745Fb12C9640237bbF27c5.');
+            alert('A adição do token não foi confirmada. Tente adicionar manualmente com o contrato: 0x619B0fcDcb30a45091745Fb12C9640237bbF27c5.');
           }
+        } else if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+          // Tenta abrir o app da MetaMask no celular
+          const dappUrl = encodeURIComponent(window.location.href);
+          const metaMaskUrl = `https://metamask.app.link/dapp/${dappUrl}`;
+          window.location.href = metaMaskUrl;
+
+          // Verifica se o redirecionamento falhou após 5 segundos
+          setTimeout(() => {
+            if (document.hidden) return; // Se redirecionou, não faz nada
+            alert('Não foi possível abrir a MetaMask. Certifique-se de que o app está instalado e atualizado, ou tente acessar o site pelo navegador da MetaMask.');
+          }, 5000);
         } else {
-          alert('MetaMask não detectada. Instale a extensão ou use o app da MetaMask e tente novamente.');
+          alert('MetaMask não detectada. Instale a extensão ou o app da MetaMask e tente novamente.');
         }
       } catch (error) {
         console.error('Erro ao adicionar token:', error);
-        alert('Erro ao adicionar o token. Verifique se a MetaMask está na rede Polygon e tente adicionar manualmente com o contrato: 0x619B0fcDcb30a45091745Fb12C9640237bbF27c5.');
+        alert('Erro ao adicionar o token. Verifique se a MetaMask está na rede Polygon e tente novamente.');
       }
     }
 
