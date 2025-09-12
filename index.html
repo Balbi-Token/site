@@ -365,6 +365,58 @@
         navLinks.classList.remove('active');
       }
     });
+
+    // Adição do token BALBI à MetaMask via EIP-747
+    async function addBALBIToken() {
+      if (typeof window.ethereum === 'undefined') {
+        alert('Por favor, instale a MetaMask para adicionar o token!');
+        return;
+      }
+
+      try {
+        const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+        if (chainId !== '0x89') {
+          alert('Mude para a rede Polygon Mainnet na MetaMask.');
+          return;
+        }
+
+        const tokenParams = {
+          type: 'ERC20',
+          options: {
+            address: '0x619B0fcDcb30a45091745Fb12C9640237bbF27c5',
+            symbol: 'BALBI',
+            decimals: 18,
+            image: 'https://raw.githubusercontent.com/Balbi-Token/site/bb96cc4a2d2b759839492cd6277777f5c1821f7a/balbi-logo-32.svg'
+          }
+        };
+
+        const wasAdded = await window.ethereum.request({
+          method: 'wallet_watchAsset',
+          params: tokenParams
+        });
+
+        if (wasAdded) {
+          alert('BALBI adicionado à sua MetaMask com sucesso! Verifique na aba "Assets".');
+        } else {
+          alert('Falha ao adicionar o token. Confirme na MetaMask ou tente novamente.');
+        }
+      } catch (error) {
+        console.error('Erro ao adicionar token:', error);
+        alert('Erro: ' + (error.message || 'Falha na conexão com a wallet.'));
+      }
+    }
+
+    // Adiciona os botões alinhados centralizados na seção "Como Obter"
+    const buttonContainer = document.querySelector('#como-obter div[style*="text-align:center"]');
+    const addTokenButton = document.createElement('button');
+    addTokenButton.id = 'addToken';
+    addTokenButton.className = 'cta-button';
+    addTokenButton.textContent = 'Adicionar BALBI à Minha Wallet';
+    addTokenButton.addEventListener('click', addBALBIToken);
+    buttonContainer.insertBefore(addTokenButton, buttonContainer.firstChild);
+    buttonContainer.style.display = 'flex';
+    buttonContainer.style.justifyContent = 'center';
+    buttonContainer.style.gap = '20px';
   </script>
 </body>
 </html>
