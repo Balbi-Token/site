@@ -366,13 +366,8 @@
       }
     });
 
-    // Adição do token BALBI à MetaMask com redirecionamento
+    // Adição do token BALBI à MetaMask com redirecionamento melhorado
     async function addBALBIToken() {
-      if (window.location.href.includes('localhost') || window.location.protocol === 'file:') {
-        alert('Teste em um servidor web (não localhost ou arquivo local) para integração com MetaMask.');
-        return;
-      }
-
       const tokenParams = {
         type: 'ERC20',
         options: {
@@ -384,7 +379,7 @@
       };
 
       try {
-        // Tenta adicionar o token via wallet_watchAsset
+        // Tenta adicionar o token via wallet_watchAsset se MetaMask estiver disponível
         if (typeof window.ethereum !== 'undefined') {
           const chainId = await window.ethereum.request({ method: 'eth_chainId' });
           if (chainId !== '0x89') {
@@ -398,13 +393,22 @@
           });
           alert('BALBI adicionado à sua MetaMask! Verifique na aba "Assets".');
         } else {
-          // Redireciona para o app da MetaMask em dispositivos móveis
-          const metaMaskUrl = 'https://metamask.app.link/dapp/' + encodeURIComponent(window.location.href);
+          // Redirecionamento para o app da MetaMask em dispositivos móveis
+          const dappUrl = encodeURIComponent(window.location.href);
+          const metaMaskUrl = `https://metamask.app.link/dapp/${dappUrl}`;
+          
+          // Tenta abrir o deep link
           window.location.href = metaMaskUrl;
+
+          // Timeout para detectar falha no redirecionamento (5 segundos)
+          setTimeout(() => {
+            if (document.hidden) return; // Se a página foi redirecionada, não faz nada
+            alert('Falha ao abrir a MetaMask. Certifique-se de que o app está instalado e tente novamente, ou acesse o site pelo navegador da MetaMask.');
+          }, 5000);
         }
       } catch (error) {
         console.error('Erro ao adicionar token:', error);
-        alert('Falha ao adicionar o token. Certifique-se de que a MetaMask está instalada e na rede Polygon.');
+        alert('Erro ao adicionar o token. Certifique-se de que a MetaMask está instalada, na rede Polygon, e tente novamente.');
       }
     }
 
