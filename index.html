@@ -366,43 +366,45 @@
       }
     });
 
-    // Adição do token BALBI à MetaMask via EIP-747
+    // Adição do token BALBI à MetaMask com redirecionamento
     async function addBALBIToken() {
-      if (typeof window.ethereum === 'undefined') {
-        alert('Por favor, instale a MetaMask para adicionar o token!');
+      if (window.location.href.includes('localhost') || window.location.protocol === 'file:') {
+        alert('Teste em um servidor web (não localhost ou arquivo local) para integração com MetaMask.');
         return;
       }
 
-      try {
-        const chainId = await window.ethereum.request({ method: 'eth_chainId' });
-        if (chainId !== '0x89') {
-          alert('Mude para a rede Polygon Mainnet na MetaMask.');
-          return;
+      const tokenParams = {
+        type: 'ERC20',
+        options: {
+          address: '0x619B0fcDcb30a45091745Fb12C9640237bbF27c5',
+          symbol: 'BALBI',
+          decimals: 18,
+          image: 'https://raw.githubusercontent.com/Balbi-Token/site/bb96cc4a2d2b759839492cd6277777f5c1821f7a/balbi-logo-32.svg'
         }
+      };
 
-        const tokenParams = {
-          type: 'ERC20',
-          options: {
-            address: '0x619B0fcDcb30a45091745Fb12C9640237bbF27c5',
-            symbol: 'BALBI',
-            decimals: 18,
-            image: 'https://raw.githubusercontent.com/Balbi-Token/site/bb96cc4a2d2b759839492cd6277777f5c1821f7a/balbi-logo-32.svg'
+      try {
+        // Tenta adicionar o token via wallet_watchAsset
+        if (typeof window.ethereum !== 'undefined') {
+          const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+          if (chainId !== '0x89') {
+            alert('Por favor, mude para a rede Polygon Mainnet na MetaMask.');
+            return;
           }
-        };
 
-        const wasAdded = await window.ethereum.request({
-          method: 'wallet_watchAsset',
-          params: tokenParams
-        });
-
-        if (wasAdded) {
-          alert('BALBI adicionado à sua MetaMask com sucesso! Verifique na aba "Assets".');
+          await window.ethereum.request({
+            method: 'wallet_watchAsset',
+            params: tokenParams
+          });
+          alert('BALBI adicionado à sua MetaMask! Verifique na aba "Assets".');
         } else {
-          alert('Falha ao adicionar o token. Confirme na MetaMask ou tente novamente.');
+          // Redireciona para o app da MetaMask em dispositivos móveis
+          const metaMaskUrl = 'https://metamask.app.link/dapp/' + encodeURIComponent(window.location.href);
+          window.location.href = metaMaskUrl;
         }
       } catch (error) {
         console.error('Erro ao adicionar token:', error);
-        alert('Erro: ' + (error.message || 'Falha na conexão com a wallet.'));
+        alert('Falha ao adicionar o token. Certifique-se de que a MetaMask está instalada e na rede Polygon.');
       }
     }
 
