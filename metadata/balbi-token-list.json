@@ -1,0 +1,23 @@
+{
+  "name": "BALBI Token List",
+  "timestamp": "2025-09-12T22:17:00Z",
+  "version": {
+    "major": 1,
+    "minor": 0,
+    "patch": 0
+  },
+  "tokens": [
+    {
+      "chainId": 137,
+      "address": "0x619b0fcdcb30a45091745fb12c9640237bbf27c5",
+      "name": "BALBI",
+      "symbol": "BALBI",
+      "decimals": 18,
+      "description": "Token BALBI - Solução inovadora de descarbonização em sistemas HVAC na blockchain da Polygon",
+      "website": "https://balbitoken.com",
+      "twitter": "https://x.com/balbitoken",
+      "instagram": "https://instagram.com/balbitoken",
+      "logoURI": "https://raw.githubusercontent.com/Balbi-Token/site/4783898021460026e9d6258c00c13b81c22f7d41/logo.png"
+    }
+  ]
+}
